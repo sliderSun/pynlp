@@ -8,7 +8,7 @@ try bert model for multi-label classification, please check session #Models Deta
 
 Google's BERT achieved new state of art result on more than 10 tasks in NLP using pre-train in language model then 
 
-fine-tuning. <a href='https://github.com/brightmart/bert_language_understanding'>Pre-train TexCNN: idea from BERT for language understanding with running code and data set</a>
+fine-tuning. <a href='https://github.com/sliderSun/bert_language_understanding'>Pre-train TexCNN: idea from BERT for language understanding with running code and data set</a>
 
 
 #### Introduction
@@ -22,7 +22,7 @@ classic, so they may be good to serve as baseline models. each model has a test 
 
 it to performance toy task first. the model is independent from data set.
 
-<a href='https://github.com/brightmart/text_classification/blob/master/multi-label-classification.pdf'>check here for formal report of large scale multi-label text classification with deep learning</a>
+<a href='https://github.com/sliderSun/text_classification/blob/master/multi-label-classification.pdf'>check here for formal report of large scale multi-label text classification with deep learning</a>
 
 several models here can also be used for modelling question answering (with or without context), or to do sequences generating. 
 
@@ -147,7 +147,7 @@ it's a zip file about 1.8G, contains 3 million training data. although after unz
 
 hdf5, it only need a normal size of memory of computer(e.g.8 G or less) during training.
 
-we use jupyter notebook: <a href='https://github.com/brightmart/text_classification/blob/master/pre-processing.ipynb'>pre-processing.ipynb</a> to pre-process data. you can have a better understanding of this task and 
+we use jupyter notebook: <a href='https://github.com/sliderSun/text_classification/blob/master/pre-processing.ipynb'>pre-processing.ipynb</a> to pre-process data. you can have a better understanding of this task and
 
 data by taking a look of it. you can also generate data by yourself in the way your want, just change few lines of code 
 
@@ -160,7 +160,7 @@ If you want to try a model now, you can dowload cached file from above, then go 
 it will use data from cached files to train the model, and print loss and F1 score periodically.
 
 old sample data source:
-if you need some sample data and word embedding per-trained on word2vec, you can find it in closed issues, such as: <a href="https://github.com/brightmart/text_classification/issues/3">issue 3</a>. 
+if you need some sample data and word embedding per-trained on word2vec, you can find it in closed issues, such as: <a href="https://github.com/sliderSun/text_classification/issues/3">issue 3</a>.
 
 you can also find some sample data at folder "data". it contains two files:'sample_single_label.txt', contains 50k data 
 
@@ -251,7 +251,7 @@ result: performance is as good as paper, speed also very fast.
 
 check: p5_fastTextB_model.py
 
-![alt text](https://github.com/brightmart/text_classification/blob/master/images/fastText.JPG)
+![alt text](https://github.com/sliderSun/text_classification/blob/master/images/fastText.JPG)
 -------------------------------------------------------------------------
 
 2.TextCNN:
@@ -274,7 +274,7 @@ Thirdly, we will concatenate scalars to form final features. It is a fixed-size 
 
 Finally, we will use linear layer to project these features to per-defined labels.
 
-![alt text](https://github.com/brightmart/text_classification/blob/master/images/TextCNN.JPG)
+![alt text](https://github.com/sliderSun/text_classification/blob/master/images/TextCNN.JPG)
 
 -------------------------------------------------------------------------
 
@@ -339,9 +339,9 @@ the first one.
     Input = [CLS] the man heading to the store [SEP] penguin [MASK] are flight ##less birds [SEP]
     Label = NotNext
     
-<img src="https://github.com/brightmart/text_classification/blob/master/images/bert_1.jpeg"  width="65%" height="65%" />
+<img src="https://github.com/sliderSun/text_classification/blob/master/images/bert_1.jpeg"  width="65%" height="65%" />
 
-<img src="https://github.com/brightmart/text_classification/blob/master/images/bert_2.jpeg"  width="65%" height="65%" />
+<img src="https://github.com/sliderSun/text_classification/blob/master/images/bert_2.jpeg"  width="65%" height="65%" />
 
 
 #### How to use BERT?
@@ -359,13 +359,13 @@ run the following command under folder a00_Bert:
 It achieve 0.368 after 9 epoch.
 or you can run multi-label classification with downloadable data using BERT from 
 
-<a href='https://github.com/brightmart/sentiment_analysis_fine_grain'>sentiment_analysis_fine_grain with BERT</a>
+<a href='https://github.com/sliderSun/sentiment_analysis_fine_grain'>sentiment_analysis_fine_grain with BERT</a>
  
 #### Use BERT for online prediction 
 
 you can use session and feed style to restore model and feed data, then get logits to make a online prediction.
 
-<a href='https://github.com/brightmart/sentiment_analysis_fine_grain'>online prediction with BERT</a>
+<a href='https://github.com/sliderSun/sentiment_analysis_fine_grain'>online prediction with BERT</a>
 
 originally, it train or evaluate model based on file, not for online.
 
@@ -396,13 +396,13 @@ Structure v1:embedding--->bi-directional lstm--->concat output--->average----->s
 
 check: p8_TextRNN_model.py
 
-![alt text](https://github.com/brightmart/text_classification/blob/master/images/bi-directionalRNN.JPG)
+![alt text](https://github.com/sliderSun/text_classification/blob/master/images/bi-directionalRNN.JPG)
 
 Structure v2:embedding-->bi-directional lstm---->dropout-->concat ouput--->lstm--->droput-->FC layer-->softmax layer
 
 check: p8_TextRNN_model_multilayer.py
 
-![alt text](https://github.com/brightmart/text_classification/blob/master/images/emojifier-v2.png)
+![alt text](https://github.com/sliderSun/text_classification/blob/master/images/emojifier-v2.png)
 
 
 -------------------------------------------------------------------------
@@ -459,7 +459,7 @@ for left side context, it use a recurrent structure, a no-linearity transfrom of
 
 check: p71_TextRCNN_model.py
 
-![alt text](https://github.com/brightmart/text_classification/blob/master/images/RCNN.JPG)
+![alt text](https://github.com/sliderSun/text_classification/blob/master/images/RCNN.JPG)
 
 -------------------------------------------------------------------------
 
@@ -481,7 +481,7 @@ Structure:
 
 5) FC+Softmax
 
-![alt text](https://github.com/brightmart/text_classification/blob/master/images/HAN.JPG)
+![alt text](https://github.com/sliderSun/text_classification/blob/master/images/HAN.JPG)
 
 In NLP, text classification can be done for single sentence, but it can also be used for multiple sentences. we may call it document classification. Words are form to sentence. And sentence are form to document. In this circumstance, there may exists a intrinsic structure. So how can we model this kinds of task? Does all parts of document are equally relevant? And how we determine which part are more important than another?
 
@@ -511,7 +511,7 @@ In my training data, for each example, i have four parts. each part has same len
 
 check:p1_HierarchicalAttention_model.py
 
-for attentive attention you can check <a href='https://github.com/brightmart/text_classification/issues/55'>attentive attention</a>
+for attentive attention you can check <a href='https://github.com/sliderSun/text_classification/issues/55'>attentive attention</a>
 
 -------------------------------------------------------------------------
 
@@ -523,7 +523,7 @@ I.Structure:
 
 1)embedding 2)bi-GRU too get rich representation from source sentences(forward & backward). 3)decoder with attention.
 
-![alt text](https://github.com/brightmart/text_classification/blob/master/images/seq2seqAttention.JPG)
+![alt text](https://github.com/sliderSun/text_classification/blob/master/images/seq2seqAttention.JPG)
 
 II.Input of data:
 
@@ -569,7 +569,7 @@ For every building blocks, we include a test function in the each file below, an
 
 Sequence to sequence with attention is a typical model to solve sequence generation problem, such as translate, dialogue system. most of time, it use RNN as buidling block to do these tasks. util recently, people also apply convolutional Neural Network for sequence to sequence problem. Transformer, however, it perform these tasks solely on attention mechansim. it is fast and achieve new state-of-art result.
 
-![alt text](https://github.com/brightmart/text_classification/blob/master/images/attention_is_all_you_need.JPG)
+![alt text](https://github.com/sliderSun/text_classification/blob/master/images/attention_is_all_you_need.JPG)
 
 It also has two main parts: encoder and decoder. below is desc from paper:
 
@@ -628,7 +628,7 @@ b. get weighted sum of hidden state using possibility distribution.
 
 c. non-linearity transform of query and hidden state to get predict label.
 
-![alt text](https://github.com/brightmart/text_classification/blob/master/images/EntityNet.JPG)
+![alt text](https://github.com/sliderSun/text_classification/blob/master/images/EntityNet.JPG)
 
 Main take away from this model:
 
@@ -656,7 +656,7 @@ Outlook of Model:
 
 4.Answer Module:generate an answer from the final memory vector.
 
-![alt text](https://github.com/brightmart/text_classification/blob/master/images/DMN.JPG)
+![alt text](https://github.com/sliderSun/text_classification/blob/master/images/DMN.JPG)
 
 Detail:
 
@@ -746,4 +746,4 @@ Reference:
 
 -------------------------------------------------------------------------
 
-to be continued. for any problem, concat brightmart@hotmail.com
+to be continued. for any problem, concat 291952004@qq.com
