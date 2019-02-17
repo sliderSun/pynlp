@@ -1,4 +1,6 @@
 # encoding = utf8
+import math
+
 import numpy as np
 import tensorflow as tf
 from tensorflow.contrib.crf import crf_log_likelihood
@@ -7,7 +9,6 @@ from tensorflow.contrib.layers.python.layers import initializers
 
 import rnncell as rnn
 from utils import result_to_json
-from data_utils import create_input, iobes_iob
 
 
 class Model(object):
@@ -15,7 +16,7 @@ class Model(object):
 
         self.config = config
         self.is_train = is_train
-        
+
         self.lr = config["lr"]
         self.char_dim = config["char_dim"]
         self.lstm_dim = config["lstm_dim"]
@@ -29,10 +30,16 @@ class Model(object):
         self.best_dev_f1 = tf.Variable(0.0, trainable=False)
         self.best_test_f1 = tf.Variable(0.0, trainable=False)
         self.initializer = initializers.xavier_initializer()
-        
-        
 
-        # add placeholders for the model
+        def gelu(x):
+            return 0.5 * x * (1 + tf.tanh(
+                tf.sqrt(2 / tf.constant(math.pi, dtype=tf.float32)) * (x + 0.044715 * tf.pow(x, 3))))
+
+        self.kaiming_initializer = tf.keras.initializers.he_uniform()
+
+        self.activate = gelu
+
+        # add placeholders for the ckpt
 
         self.char_inputs = tf.placeholder(dtype=tf.int32,
                                           shape=[None, None],
@@ -53,11 +60,10 @@ class Model(object):
         self.lengths = tf.cast(length, tf.int32)
         self.batch_size = tf.shape(self.char_inputs)[0]
         self.num_steps = tf.shape(self.char_inputs)[-1]
-        
-        
-        #Add model type by crownpku， bilstm or idcnn
+
+        # Add ckpt type by crownpku， bilstm or idcnn
         self.model_type = config['model_type']
-        #parameters for idcnn
+        # parameters for idcnn
         self.layers = [
             {
                 'dilation': 1
@@ -70,12 +76,10 @@ class Model(object):
             },
         ]
         self.filter_width = 3
-        self.num_filter = self.lstm_dim 
+        self.num_filter = self.lstm_dim
         self.embedding_dim = self.char_dim + self.seg_dim
         self.repeat_times = 4
         self.cnn_output_width = 0
-        
-        
 
         # embeddings for chinese character and segmentation representation
         embedding = self.embedding_layer(self.char_inputs, self.seg_inputs, config)
@@ -89,7 +93,7 @@ class Model(object):
 
             # logits for tags
             self.logits = self.project_layer_bilstm(model_outputs)
-        
+
         elif self.model_type == 'idcnn':
             # apply dropout before feed to idcnn layer
             model_inputs = tf.nn.dropout(embedding, self.dropout)
@@ -99,11 +103,11 @@ class Model(object):
 
             # logits for tags
             self.logits = self.project_layer_idcnn(model_outputs)
-        
+
         else:
             raise KeyError
 
-        # loss of the model
+        # loss of the ckpt
         self.loss = self.loss_layer(self.logits, self.lengths)
 
         with tf.variable_scope("optimizer"):
@@ -123,7 +127,7 @@ class Model(object):
                                  for g, v in grads_vars]
             self.train_op = self.opt.apply_gradients(capped_grads_vars, self.global_step)
 
-        # saver of the model
+        # saver of the ckpt
         self.saver = tf.train.Saver(tf.global_variables(), max_to_keep=5)
 
     def embedding_layer(self, char_inputs, seg_inputs, config, name=None):
@@ -131,15 +135,15 @@ class Model(object):
         :param char_inputs: one-hot encoding of sentence
         :param seg_inputs: segmentation feature
         :param config: wither use segmentation feature
-        :return: [1, num_steps, embedding size], 
+        :return: [1, num_steps, embedding size],
         """
 
         embedding = []
         with tf.variable_scope("char_embedding" if not name else name), tf.device('/cpu:0'):
             self.char_lookup = tf.get_variable(
-                    name="char_embedding",
-                    shape=[self.num_chars, self.char_dim],
-                    initializer=self.initializer)
+                name="char_embedding",
+                shape=[self.num_chars, self.char_dim],
+                initializer=self.initializer)
             embedding.append(tf.nn.embedding_lookup(self.char_lookup, char_inputs))
             if config["seg_dim"]:
                 with tf.variable_scope("seg_embedding"), tf.device('/cpu:0'):
@@ -153,8 +157,8 @@ class Model(object):
 
     def biLSTM_layer(self, model_inputs, lstm_dim, lengths, name=None):
         """
-        :param lstm_inputs: [batch_size, num_steps, emb_size] 
-        :return: [batch_size, num_steps, 2*lstm_dim] 
+        :param lstm_inputs: [batch_size, num_steps, emb_size]
+        :return: [batch_size, num_steps, 2*lstm_dim]
         """
         with tf.variable_scope("char_BiLSTM" if not name else name):
             lstm_cell = {}
@@ -172,12 +176,12 @@ class Model(object):
                 dtype=tf.float32,
                 sequence_length=lengths)
         return tf.concat(outputs, axis=2)
-    
-    #IDCNN layer 
-    def IDCNN_layer(self, model_inputs, 
+
+    # IDCNN layer
+    def IDCNN_layer(self, model_inputs,
                     name=None):
         """
-        :param idcnn_inputs: [batch_size, num_steps, emb_size] 
+        :param idcnn_inputs: [batch_size, num_steps, emb_size]
         :return: [batch_size, num_steps, cnn_output_width]
         """
         model_inputs = tf.expand_dims(model_inputs, 1)
@@ -185,15 +189,13 @@ class Model(object):
         if not self.is_train:
             reuse = True
         with tf.variable_scope("idcnn" if not name else name):
-            shape=[1, self.filter_width, self.embedding_dim,
-                       self.num_filter]
+            shape = [1, self.filter_width, self.embedding_dim,
+                     self.num_filter]
             print(shape)
             filter_weights = tf.get_variable(
                 "idcnn_filter",
-                shape=[1, self.filter_width, self.embedding_dim,
-                       self.num_filter],
-                initializer=self.initializer)
-            
+                initializer=self.kaiming_initializer)
+
             """
             shape of input = [batch, in_height, in_width, in_channels]
             shape of filter = [filter_height, filter_width, in_channels, out_channels]
@@ -211,18 +213,18 @@ class Model(object):
                     isLast = True if i == (len(self.layers) - 1) else False
                     with tf.variable_scope("atrous-conv-layer-%d" % i,
                                            reuse=tf.AUTO_REUSE):
+                        shape = [1, self.filter_width, self.num_filter,
+                                 self.num_filter]
                         w = tf.get_variable(
                             "filterW",
-                            shape=[1, self.filter_width, self.num_filter,
-                                   self.num_filter],
-                            initializer=tf.contrib.layers.xavier_initializer())
+                            initializer=self.kaiming_initializer)
                         b = tf.get_variable("filterB", shape=[self.num_filter])
                         conv = tf.nn.atrous_conv2d(layerInput,
                                                    w,
                                                    rate=dilation,
                                                    padding="SAME")
                         conv = tf.nn.bias_add(conv, b)
-                        conv = tf.nn.relu(conv)
+                        conv = self.activate(conv)
                         if isLast:
                             finalOutFromLayers.append(conv)
                             totalWidthForLastDim += self.num_filter
@@ -239,17 +241,17 @@ class Model(object):
     def project_layer_bilstm(self, lstm_outputs, name=None):
         """
         hidden layer between lstm layer and logits
-        :param lstm_outputs: [batch_size, num_steps, emb_size] 
+        :param lstm_outputs: [batch_size, num_steps, emb_size]
         :return: [batch_size, num_steps, num_tags]
         """
-        with tf.variable_scope("project"  if not name else name):
+        with tf.variable_scope("project" if not name else name):
             with tf.variable_scope("hidden"):
-                W = tf.get_variable("W", shape=[self.lstm_dim*2, self.lstm_dim],
+                W = tf.get_variable("W", shape=[self.lstm_dim * 2, self.lstm_dim],
                                     dtype=tf.float32, initializer=self.initializer)
 
                 b = tf.get_variable("b", shape=[self.lstm_dim], dtype=tf.float32,
                                     initializer=tf.zeros_initializer())
-                output = tf.reshape(lstm_outputs, shape=[-1, self.lstm_dim*2])
+                output = tf.reshape(lstm_outputs, shape=[-1, self.lstm_dim * 2])
                 hidden = tf.tanh(tf.nn.xw_plus_b(output, W, b))
 
             # project to score of tags
@@ -263,22 +265,21 @@ class Model(object):
                 pred = tf.nn.xw_plus_b(hidden, W, b)
 
             return tf.reshape(pred, [-1, self.num_steps, self.num_tags])
-    
-    #Project layer for idcnn by crownpku
-    #Delete the hidden layer, and change bias initializer
+
+    # Project layer for idcnn by crownpku
+    # Delete the hidden layer, and change bias initializer
     def project_layer_idcnn(self, idcnn_outputs, name=None):
         """
-        :param lstm_outputs: [batch_size, num_steps, emb_size] 
+        :param lstm_outputs: [batch_size, num_steps, emb_size]
         :return: [batch_size, num_steps, num_tags]
         """
-        with tf.variable_scope("project"  if not name else name):
-            
+        with tf.variable_scope("project" if not name else name):
             # project to score of tags
             with tf.variable_scope("logits"):
                 W = tf.get_variable("W", shape=[self.cnn_output_width, self.num_tags],
                                     dtype=tf.float32, initializer=self.initializer)
 
-                b = tf.get_variable("b",  initializer=tf.constant(0.001, shape=[self.num_tags]))
+                b = tf.get_variable("b", initializer=tf.constant(0.001, shape=[self.num_tags]))
 
                 pred = tf.nn.xw_plus_b(idcnn_outputs, W, b)
 
@@ -290,16 +291,17 @@ class Model(object):
         :param project_logits: [1, num_steps, num_tags]
         :return: scalar loss
         """
-        with tf.variable_scope("crf_loss"  if not name else name):
+        with tf.variable_scope("crf_loss" if not name else name):
             small = -1000.0
             # pad logits for crf loss
             start_logits = tf.concat(
-                [small * tf.ones(shape=[self.batch_size, 1, self.num_tags]), tf.zeros(shape=[self.batch_size, 1, 1])], axis=-1)
+                [small * tf.ones(shape=[self.batch_size, 1, self.num_tags]), tf.zeros(shape=[self.batch_size, 1, 1])],
+                axis=-1)
             pad_logits = tf.cast(small * tf.ones([self.batch_size, self.num_steps, 1]), tf.float32)
             logits = tf.concat([project_logits, pad_logits], axis=-1)
             logits = tf.concat([start_logits, logits], axis=1)
             targets = tf.concat(
-                [tf.cast(self.num_tags*tf.ones([self.batch_size, 1]), tf.int32), self.targets], axis=-1)
+                [tf.cast(self.num_tags * tf.ones([self.batch_size, 1]), tf.int32), self.targets], axis=-1)
 
             self.trans = tf.get_variable(
                 "transitions",
@@ -309,13 +311,13 @@ class Model(object):
                 inputs=logits,
                 tag_indices=targets,
                 transition_params=self.trans,
-                sequence_lengths=lengths+1)
+                sequence_lengths=lengths + 1)
             return tf.reduce_mean(-log_likelihood)
 
     def create_feed_dict(self, is_train, batch):
         """
         :param is_train: Flag, True for train batch
-        :param batch: list train/evaluate data 
+        :param batch: list train/evaluate data
         :return: structured data to feed
         """
         _, chars, segs, tags = batch
@@ -336,14 +338,14 @@ class Model(object):
         :param batch: a dict containing batch data
         :return: batch result, loss of the batch or logits
         """
-        feed_dict = self.create_feed_dict(is_train, batch)
+        self.feed_dict = self.create_feed_dict(is_train, batch)
         if is_train:
             global_step, loss, _ = sess.run(
                 [self.global_step, self.loss, self.train_op],
-                feed_dict)
+                self.feed_dict)
             return global_step, loss
         else:
-            lengths, logits = sess.run([self.lengths, self.logits], feed_dict)
+            lengths, logits = sess.run([self.lengths, self.logits], self.feed_dict)
             return lengths, logits
 
     def decode(self, logits, lengths, matrix):
@@ -356,7 +358,7 @@ class Model(object):
         # inference final labels usa viterbi Algorithm
         paths = []
         small = -1000.0
-        start = np.asarray([[small]*self.num_tags +[0]])
+        start = np.asarray([[small] * self.num_tags + [0]])
         for score, length in zip(logits, lengths):
             score = score[:length]
             pad = small * np.ones([length, 1])
@@ -369,7 +371,7 @@ class Model(object):
 
     def evaluate(self, sess, data_manager, id_to_tag):
         """
-        :param sess: session  to run the model 
+        :param sess: session  to run the ckpt
         :param data: list of data
         :param id_to_tag: index to tag name
         :return: evaluate result
@@ -384,8 +386,8 @@ class Model(object):
             for i in range(len(strings)):
                 result = []
                 string = strings[i][:lengths[i]]
-                gold = iobes_iob([id_to_tag[int(x)] for x in tags[i][:lengths[i]]])
-                pred = iobes_iob([id_to_tag[int(x)] for x in batch_paths[i][:lengths[i]]])
+                gold = [id_to_tag[int(x)] for x in tags[i][:lengths[i]]]
+                pred = [id_to_tag[int(x)] for x in batch_paths[i][:lengths[i]]]
                 for char, gold, pred in zip(string, gold, pred):
                     result.append(" ".join([char, gold, pred]))
                 results.append(result)

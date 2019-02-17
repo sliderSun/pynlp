@@ -1,8 +1,10 @@
+import codecs
 import os
 import json
 import shutil
 import logging
 
+import six
 import tensorflow as tf
 from conlleval import return_report
 
@@ -29,7 +31,7 @@ def get_logger(log_file):
 
 # def test_ner(results, path):
 #     """
-#     Run perl script to evaluate model
+#     Run perl script to evaluate ckpt
 #     """
 #     script_file = "conlleval"
 #     output_file = os.path.join(path, "ner_predict.utf8")
@@ -52,10 +54,10 @@ def get_logger(log_file):
 
 def test_ner(results, path):
     """
-    Run perl script to evaluate model
+    Run perl script to evaluate ckpt
     """
     output_file = os.path.join(path, "ner_predict.utf8")
-    with open(output_file, "w") as f:
+    with codecs.open(output_file, "w", 'utf-8') as f:
         to_write = []
         for block in results:
             for line in block:
@@ -69,7 +71,7 @@ def test_ner(results, path):
 
 def print_config(config, logger):
     """
-    Print configuration of the model
+    Print configuration of the ckpt
     """
     for k, v in config.items():
         logger.info("{}:\t{}".format(k.ljust(15), v))
@@ -90,7 +92,7 @@ def make_path(params):
 def clean(params):
     """
     Clean current folder
-    remove saved model and training log
+    remove saved ckpt and training log
     """
     if os.path.isfile(params.vocab_file):
         os.remove(params.vocab_file)
@@ -122,7 +124,7 @@ def clean(params):
 
 def save_config(config, config_file):
     """
-    Save configuration of the model
+    Save configuration of the ckpt
     parameters are stored in json format
     """
     with open(config_file, "w", encoding="utf8") as f:
@@ -131,11 +133,31 @@ def save_config(config, config_file):
 
 def load_config(config_file):
     """
-    Load configuration of the model
+    Load configuration of the ckpt
     parameters are stored in json format
     """
     with open(config_file, encoding="utf8") as f:
         return json.load(f)
+
+
+def convert_to_unicode(text):
+    """Converts `text` to Unicode (if it's not already), assuming utf-8 input."""
+    if six.PY3:
+        if isinstance(text, str):
+            return text
+        elif isinstance(text, bytes):
+            return text.decode("utf-8", "ignore")
+        else:
+            raise ValueError("Unsupported string type: %s" % (type(text)))
+    elif six.PY2:
+        if isinstance(text, str):
+            return text.decode("utf-8", "ignore")
+        elif isinstance(text, unicode):
+            return text
+        else:
+            raise ValueError("Unsupported string type: %s" % (type(text)))
+    else:
+        raise ValueError("Not running on Python2 or Python 3?")
 
 
 def convert_to_text(line):
@@ -164,20 +186,29 @@ def convert_to_text(line):
 def save_model(sess, model, path, logger):
     checkpoint_path = os.path.join(path, "ner.ckpt")
     model.saver.save(sess, checkpoint_path)
-    logger.info("model saved")
+    logger.info("ckpt saved")
 
 
 def create_model(session, Model_class, path, load_vec, config, id_to_char, logger, is_train=True):
-    # create model, reuse parameters if exists
+    # create ckpt, reuse parameters if exists
     model = Model_class(config, is_train)
+
+    if is_train:
+        tf.summary.scalar('loss', model.loss)
+        tf.summary.scalar('dev_f1', model.best_dev_f1)
+        tf.summary.scalar('test_f1', model.best_test_f1)
+        model.merged = tf.summary.merge_all()
+        model.writer = tf.summary.FileWriter(config['tensorboard'])
 
     ckpt = tf.train.get_checkpoint_state(path)
     if ckpt and tf.train.checkpoint_exists(ckpt.model_checkpoint_path):
-        logger.info("Reading model parameters from %s" % ckpt.model_checkpoint_path)
+        logger.info("Reading ckpt parameters from %s" % ckpt.model_checkpoint_path)
         model.saver.restore(session, ckpt.model_checkpoint_path)
     else:
-        logger.info("Created model with fresh parameters.")
+        logger.info("Created ckpt with fresh parameters.")
         session.run(tf.global_variables_initializer())
+        if is_train:
+            model.writer.add_graph(graph=session.graph)
         if config["pre_emb"]:
             emb_weights = session.run(model.char_lookup.read_value())
             emb_weights = load_vec(config["emb_file"],id_to_char, config["char_dim"], emb_weights)

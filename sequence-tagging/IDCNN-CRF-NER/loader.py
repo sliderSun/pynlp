@@ -1,9 +1,9 @@
+import codecs
 import os
 import re
-import codecs
 
 from data_utils import create_dico, create_mapping, zero_digits
-from data_utils import iob2, iob_iobes, get_seg_features
+from data_utils import get_seg_features
 
 
 def load_sentences(path, lower, zeros):
@@ -16,50 +16,19 @@ def load_sentences(path, lower, zeros):
     num = 0
     for line in codecs.open(path, 'r', 'utf8'):
         num+=1
-        line = zero_digits(line.rstrip()) if zeros else line.rstrip()
+        line = zero_digits(line.strip()) if zeros else line.strip()
         # print(list(line))
         if not line:
             if len(sentence) > 0:
-                if 'DOCSTART' not in sentence[0][0]:
-                    sentences.append(sentence)
+                sentences.append(sentence)
                 sentence = []
         else:
-            if line[0] == " ":
-                line = "$" + line[1:]
-                word = line.split()
-                # word[0] = " "
-            else:
-                word= line.split()
+            word= line.split()
             assert len(word) >= 2, print([word[0]])
             sentence.append(word)
     if len(sentence) > 0:
-        if 'DOCSTART' not in sentence[0][0]:
-            sentences.append(sentence)
+        sentences.append(sentence)
     return sentences
-
-
-def update_tag_scheme(sentences, tag_scheme):
-    """
-    Check and update sentences tagging scheme to IOB2.
-    Only IOB1 and IOB2 schemes are accepted.
-    """
-    for i, s in enumerate(sentences):
-        tags = [w[-1] for w in s]
-        # Check that tags are given in the IOB format
-        if not iob2(tags):
-            s_str = '\n'.join(' '.join(w) for w in s)
-            raise Exception('Sentences should be given in IOB format! ' +
-                            'Please check sentence %i:\n%s' % (i, s_str))
-        if tag_scheme == 'iob':
-            # If format was IOB1, we convert to IOB2
-            for word, new_tag in zip(s, tags):
-                word[-1] = new_tag
-        elif tag_scheme == 'iobes':
-            new_tags = iob_iobes(tags)
-            for word, new_tag in zip(s, new_tags):
-                word[-1] = new_tag
-        else:
-            raise Exception('Unknown tagging scheme!')
 
 
 def char_mapping(sentences, lower):
@@ -127,7 +96,7 @@ def augment_with_pretrained(dictionary, ext_emb_path, chars):
 
     # Load pretrained embeddings from file
     pretrained = set([
-        line.rstrip().split()[0].strip()
+        line.strip().split()[0].strip()
         for line in codecs.open(ext_emb_path, 'r', 'utf-8')
         if len(ext_emb_path) > 0
     ])
