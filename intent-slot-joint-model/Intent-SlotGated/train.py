@@ -6,10 +6,10 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.contrib.rnn.python.ops import core_rnn_cell
 
-from .utils import DataProcessor
-from .utils import computeF1Score
-from .utils import createVocabulary
-from .utils import loadVocabulary
+from utils import DataProcessor
+from utils import computeF1Score
+from utils import createVocabulary
+from utils import loadVocabulary
 
 parser = argparse.ArgumentParser(allow_abbrev=False)
 
