@@ -2,7 +2,7 @@
 
 # Chinese Named Entity Recognition using IDCNN/biLSTM+CRF
 
-### [中文Blog](http://www.crownpku.com//2017/08/26/%E7%94%A8IDCNN%E5%92%8CCRF%E5%81%9A%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E4%B8%AD%E6%96%87%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB.html)
+### [中文Blog](https://blog.csdn.net/weixin_37947156/article/details/94356102)
 
 End to End Chinese Named Entity Recognition by Iterated Dilated Convolution Nerual Networks with Conditional Random Field layer.
 
@@ -11,10 +11,10 @@ Original code in https://github.com/zjy-ucas/ChineseNER with BiLSTM+CRF, modifie
 Original paper [Fast and Accurate Entity Recognition with Iterated Dilated Convolutions](https://arxiv.org/abs/1702.02098)
 
 
-![](http://crownpku.github.io/images/201708/3.jpg)
+![](https://github.com/sliderSun/pynlp/blob/master/sequence-tagging/IDCNN-CRF-NER/image/1.jpg)
 
 
-![](http://crownpku.github.io/images/201708/4.jpg)
+![](https://github.com/sliderSun/pynlp/blob/master/sequence-tagging/IDCNN-CRF-NER/image/2.jpg)
 
 
 
@@ -22,7 +22,7 @@ Original paper [Fast and Accurate Entity Recognition with Iterated Dilated Convo
 
 * Python (>=3.5)
 
-* TensorFlow (>=r1.0)
+* TensorFlow (>=r1.12)
 
 * jieba (>=0.37)
 
