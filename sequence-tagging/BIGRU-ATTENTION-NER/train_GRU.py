@@ -1,14 +1,12 @@
-import tensorflow as tf
-import numpy as np
-import time
 import datetime
-import os
+
 import network
-from tensorflow.contrib.tensorboard.plugins import projector
+import numpy as np
+import tensorflow as tf
 
-FLAGS = tf.app.flags.FLAGS
+FLAGS = tf.flags.FLAGS
 
-tf.app.flags.DEFINE_string('summary_dir', '.', 'path to store summary')
+tf.flags.DEFINE_string('summary_dir', '.', 'path to store summary')
 
 
 def main(_):

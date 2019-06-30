@@ -1,7 +1,7 @@
 
 # Chinese Relation Extraction by biGRU with Character and Sentence Attentions
 
-### [中文Blog](http://www.crownpku.com//2017/08/19/%E7%94%A8Bi-GRU%E5%92%8C%E5%AD%97%E5%90%91%E9%87%8F%E5%81%9A%E7%AB%AF%E5%88%B0%E7%AB%AF%E7%9A%84%E4%B8%AD%E6%96%87%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96.html)
+### [中文Blog](https://blog.csdn.net/weixin_37947156/article/details/94356988)
 
 Bi-directional GRU with Word and Sentence Dual Attentions for End-to End Relation Extraction
 
@@ -9,16 +9,11 @@ Original Code in https://github.com/thunlp/TensorFlow-NRE, modified for Chinese.
 
 Original paper [Attention-Based Bidirectional Long Short-Term Memory Networks for Relation Classification](http://anthology.aclweb.org/P16-2034) and [Neural Relation Extraction with Selective Attention over Instances](http://aclweb.org/anthology/P16-1200)
 
-![](http://www.crownpku.com/images/201708/1.jpg)
-
-![](http://www.crownpku.com/images/201708/2.jpg)
-
-
 ## Requrements
 
 * Python (>=3.5)
 
-* TensorFlow (>=r1.0)
+* TensorFlow (>=r1.12)
 
 * scikit-learn (>=0.18)
 

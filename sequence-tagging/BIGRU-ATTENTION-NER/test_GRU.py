@@ -1,14 +1,11 @@
-from pprint import pprint
-
-import tensorflow as tf
-import numpy as np
-import time
 import datetime
-import os
+
 import network
+import numpy as np
+import tensorflow as tf
 from sklearn.metrics import average_precision_score
 
-FLAGS = tf.app.flags.FLAGS
+FLAGS = tf.flags.FLAGS
 
 
 # embedding the position
@@ -126,7 +123,7 @@ def main_for_evaluation():
 def main(_):
 
     #If you retrain the model, please remember to change the path to your own model below:
-    pathname = "./model/ATT_GRU_model-9000"
+    pathname = "./model/"
     
     wordembedding = np.load('./data/vec.npy')
     test_settings = network.Settings()

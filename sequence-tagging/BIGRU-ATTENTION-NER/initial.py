@@ -82,7 +82,7 @@ def init():
         en2 = content[1]
         relation = 0
         if content[2] not in relation2id:
-            relation = relation2id['NA']
+            relation = relation2id['unknown']
         else:
             relation = relation2id[content[2]]
         # put the same entity pair sentences into a dict
@@ -161,7 +161,7 @@ def init():
         en2 = content[1]
         relation = 0
         if content[2] not in relation2id:
-            relation = relation2id['NA']
+            relation = relation2id['unknown']
         else:
             relation = relation2id[content[2]]
         tup = (en1, en2)
@@ -214,7 +214,7 @@ def init():
     test_y = []
 
     print('organizing train data')
-    f = open('./data/train_q&a.txt', 'w', encoding='utf-8')
+    f = open('./origin_data/train.txt', 'w', encoding='utf-8')
     temp = 0
     for i in train_sen:
         if len(train_ans[i]) != len(train_sen[i]):
@@ -228,7 +228,7 @@ def init():
     f.close()
 
     print('organizing test data')
-    f = open('./data/test_q&a.txt', 'w', encoding='utf-8')
+    f = open('./origin_data/test.txt', 'w', encoding='utf-8')
     temp = 0
     for i in test_sen:
         test_x.append(test_sen[i])
