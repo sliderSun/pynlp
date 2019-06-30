@@ -30,6 +30,7 @@ tensorflow 1.12 <br>
 python 3.6
 
 ## Usage
+![image](http://github.com/sliderSun/pynlp/intent-slot-joint-model/Intent-SlotGated/image.jpg)
 some sample usage <br>
 * run with 32 units, atis dataset and no patience for early stop <br>
 &emsp;python3 train.py --num_units=32 --dataset=atis --patience=0
