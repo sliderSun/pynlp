@@ -14,6 +14,8 @@ Tensorflow implementation of attention-based LSTM models for sequence classifica
 * TensorFlow, version 1.12 (https://www.tensorflow.org/api_docs/)
 
 **Usage**:
+![image](https://github.com/sliderSun/pynlp/blob/master/intent-slot-joint-model/JoinModel-Slot-Intent/image.jpg)
+
 ```bash
 data_dir=data/ATIS_samples
 model_dir=model_tmp
