@@ -70,21 +70,18 @@ def main_for_evaluation():
                     [mtest.loss, mtest.accuracy, mtest.prob], feed_dict)
                 return prob, accuracy
 
-           
             with tf.variable_scope("model"):
                 mtest = network.GRU(is_training=False, word_embeddings=wordembedding, settings=test_settings)
 
             names_to_vars = {v.op.name: v for v in tf.global_variables()}
             saver = tf.train.Saver(names_to_vars)
 
-        
-            #testlist = range(1000, 1800, 100)
+            # testlist = range(1000, 1800, 100)
             testlist = [9000]
-            
+
             for model_iter in testlist:
                 # for compatibility purposes only, name key changes from tf 0.x to 1.x, compat_layer
                 saver.restore(sess, pathname + str(model_iter))
-
 
                 time_str = datetime.datetime.now().isoformat()
                 print(time_str)
@@ -111,7 +108,6 @@ def main_for_evaluation():
                 print('saving all test result...')
                 current_step = model_iter
 
-                
                 np.save('./out/allprob_iter_' + str(current_step) + '.npy', allprob)
                 allans = np.load('./data/allans.npy')
 
@@ -121,16 +117,15 @@ def main_for_evaluation():
 
 
 def main(_):
+    # If you retrain the model, please remember to change the path to your own model below:
+    pathname = "./model/ATT_GRU_model-150"
 
-    #If you retrain the model, please remember to change the path to your own model below:
-    pathname = "./model/"
-    
     wordembedding = np.load('./data/vec.npy')
     test_settings = network.Settings()
     test_settings.vocab_size = 16693
     test_settings.num_classes = 12
     test_settings.big_num = 1
-    
+
     with tf.Graph().as_default():
         sess = tf.Session()
         with sess.as_default():
@@ -168,15 +163,14 @@ def main(_):
                 loss, accuracy, prob = sess.run(
                     [mtest.loss, mtest.accuracy, mtest.prob], feed_dict)
                 return prob, accuracy
-            
-            
+
             with tf.variable_scope("model"):
                 mtest = network.GRU(is_training=False, word_embeddings=wordembedding, settings=test_settings)
 
             names_to_vars = {v.op.name: v for v in tf.global_variables()}
             saver = tf.train.Saver(names_to_vars)
             saver.restore(sess, pathname)
-            
+
             print('reading word embedding data...')
             vec = []
             word2id = {}
@@ -196,7 +190,7 @@ def main(_):
             f.close()
             word2id['UNK'] = len(word2id)
             word2id['BLANK'] = len(word2id)
-            
+
             print('reading relation to id')
             relation2id = {}
             id2relation = {}
@@ -209,130 +203,117 @@ def main(_):
                 relation2id[content[0]] = int(content[1])
                 id2relation[int(content[1])] = content[0]
             f.close()
-            
-            
+
             while True:
-                #try:
-                    #BUG: Encoding error if user input directly from command line.
-                    line = input('请输入中文句子，格式为 "name1 name2 sentence":')
-                    #Read file from test file
-                    '''
-                    infile = open('test.txt', encoding='utf-8')
-                    line = ''
-                    for orgline in infile:
-                        line = orgline.strip()
-                        break
-                    infile.close()
-                    '''
-                    en1, en2, sentence = line.strip().split()
-                    print("实体1: " + en1)
-                    print("实体2: " + en2)
-                    print(sentence)
-                    relation = 0
-                    en1pos = sentence.find(en1)
-                    if en1pos == -1:
-                        en1pos = 0
-                    en2pos = sentence.find(en2)
-                    if en2pos == -1:
-                        en2post = 0
-                    output = []
-                    # length of sentence is 70
-                    fixlen = 70
-                    # max length of position embedding is 60 (-60~+60)
-                    maxlen = 60
+                # try:
+                # BUG: Encoding error if user input directly from command line.
+                line = input('请输入中文句子，格式为 "name1 name2 sentence":')
+                # Read file from test file
+                '''
+                infile = open('test.txt', encoding='utf-8')
+                line = ''
+                for orgline in infile:
+                    line = orgline.strip()
+                    break
+                infile.close()
+                '''
+                en1, en2, sentence = line.strip().split()
+                print("实体1: " + en1)
+                print("实体2: " + en2)
+                print(sentence)
+                relation = 0
+                en1pos = sentence.find(en1)
+                if en1pos == -1:
+                    en1pos = 0
+                en2pos = sentence.find(en2)
+                if en2pos == -1:
+                    en2post = 0
+                output = []
+                # length of sentence is 70
+                fixlen = 70
+                # max length of position embedding is 60 (-60~+60)
+                maxlen = 60
 
-                    #Encoding test x
-                    for i in range(fixlen):
-                        word = word2id['BLANK']
-                        rel_e1 = pos_embed(i - en1pos)
-                        rel_e2 = pos_embed(i - en2pos)
-                        output.append([word, rel_e1, rel_e2])
+                # Encoding test x
+                for i in range(fixlen):
+                    word = word2id['BLANK']
+                    rel_e1 = pos_embed(i - en1pos)
+                    rel_e2 = pos_embed(i - en2pos)
+                    output.append([word, rel_e1, rel_e2])
 
-                    for i in range(min(fixlen, len(sentence))):
-                        
-                        word = 0
-                        if sentence[i] not in word2id:
-                            #print(sentence[i])
-                            #print('==')
-                            word = word2id['UNK']
-                            #print(word)
-                        else:
-                            #print(sentence[i])
-                            #print('||')
-                            word = word2id[sentence[i]]
-                            #print(word)
-                            
-                        output[i][0] = word
-                    test_x = []
-                    test_x.append([output])
-                    
-                    #Encoding test y
-                    label = [0 for i in range(len(relation2id))]
-                    label[0] = 1
-                    test_y = []
-                    test_y.append(label)
-                    
-                    test_x = np.array(test_x)
-                    test_y = np.array(test_y)
-                    
-                    
-                    
-                    
-                    
-                    test_word = []
-                    test_pos1 = []
-                    test_pos2 = []
+                for i in range(min(fixlen, len(sentence))):
 
-                    for i in range(len(test_x)):
-                        word = []
-                        pos1 = []
-                        pos2 = []
-                        for j in test_x[i]:
-                            temp_word = []
-                            temp_pos1 = []
-                            temp_pos2 = []
-                            for k in j:
-                                temp_word.append(k[0])
-                                temp_pos1.append(k[1])
-                                temp_pos2.append(k[2])
-                            word.append(temp_word)
-                            pos1.append(temp_pos1)
-                            pos2.append(temp_pos2)
-                        test_word.append(word)
-                        test_pos1.append(pos1)
-                        test_pos2.append(pos2)
+                    word = 0
+                    if sentence[i] not in word2id:
+                        # print(sentence[i])
+                        # print('==')
+                        word = word2id['UNK']
+                        # print(word)
+                    else:
+                        # print(sentence[i])
+                        # print('||')
+                        word = word2id[sentence[i]]
+                        # print(word)
 
-                    test_word = np.array(test_word)
-                    test_pos1 = np.array(test_pos1)
-                    test_pos2 = np.array(test_pos2)
-                    
-                    #print("test_word Matrix:")
-                    #print(test_word)
-                    #print("test_pos1 Matrix:")
-                    #print(test_pos1)
-                    #print("test_pos2 Matrix:")
-                    #print(test_pos2)
-                    
+                    output[i][0] = word
+                test_x = []
+                test_x.append([output])
 
-                    
-                    
-                    prob, accuracy = test_step(test_word, test_pos1, test_pos2, test_y)
-                    prob = np.reshape(np.array(prob), (1, test_settings.num_classes))[0]
-                    print("关系是:")
-                    #print(prob)
-                    top3_id = prob.argsort()[-3:][::-1]
-                    for n, rel_id in enumerate(top3_id):
-                        print("No." + str(n+1) + ": " + id2relation[rel_id] + ", Probability is " + str(prob[rel_id]))
-                #except Exception as e:
-                #    print(e)
-                
-                
-                #result = model.evaluate_line(sess, input_from_line(line, char_to_id), id_to_tag)
-                #print(result)
-            
-    
-    
-    
+                # Encoding test y
+                label = [0 for i in range(len(relation2id))]
+                label[0] = 1
+                test_y = []
+                test_y.append(label)
+
+                test_x = np.array(test_x)
+                test_y = np.array(test_y)
+
+                test_word = []
+                test_pos1 = []
+                test_pos2 = []
+
+                for i in range(len(test_x)):
+                    word = []
+                    pos1 = []
+                    pos2 = []
+                    for j in test_x[i]:
+                        temp_word = []
+                        temp_pos1 = []
+                        temp_pos2 = []
+                        for k in j:
+                            temp_word.append(k[0])
+                            temp_pos1.append(k[1])
+                            temp_pos2.append(k[2])
+                        word.append(temp_word)
+                        pos1.append(temp_pos1)
+                        pos2.append(temp_pos2)
+                    test_word.append(word)
+                    test_pos1.append(pos1)
+                    test_pos2.append(pos2)
+
+                test_word = np.array(test_word)
+                test_pos1 = np.array(test_pos1)
+                test_pos2 = np.array(test_pos2)
+
+                # print("test_word Matrix:")
+                # print(test_word)
+                # print("test_pos1 Matrix:")
+                # print(test_pos1)
+                # print("test_pos2 Matrix:")
+                # print(test_pos2)
+
+                prob, accuracy = test_step(test_word, test_pos1, test_pos2, test_y)
+                prob = np.reshape(np.array(prob), (1, test_settings.num_classes))[0]
+                print("关系是:")
+                # print(prob)
+                top3_id = prob.argsort()[-3:][::-1]
+                for n, rel_id in enumerate(top3_id):
+                    print("No." + str(n + 1) + ": " + id2relation[rel_id] + ", Probability is " + str(prob[rel_id]))
+            # except Exception as e:
+            #    print(e)
+
+            # result = model.evaluate_line(sess, input_from_line(line, char_to_id), id_to_tag)
+            # print(result)
 
 
 if __name__ == "__main__":
