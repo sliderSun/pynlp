@@ -12,21 +12,19 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import codecs
 import collections
-import os
 import json
+import os
+import pickle
 
 import tensorflow as tf
-import codecs
-from tensorflow.contrib.layers.python.layers import initializers
-from tensorflow.contrib import estimator
+import tf_metrics
 from bert import modeling
 from bert import optimization
 from bert import tokenization
 from lstm_crf_layer import BLSTM_CRF
-
-import tf_metrics
-import pickle
+from tensorflow.contrib.layers.python.layers import initializers
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -36,11 +34,12 @@ flags = tf.flags
 FLAGS = flags.FLAGS
 
 if os.name == 'nt':
-    bert_path = 'H:\迅雷下载\chinese_L-12_H-768_A-12\chinese_L-12_H-768_A-12'
-    root_path = r'C:\workspace\python\BERT-BiLSMT-CRF-NER'
+    bert_path = 'F:\python_work\github\pynlp\sequence-tagging\BERT-BiLSTM-CRF-NER\chinese_L-12_H-768_A-12'
+    # bert_path = 'F:\python_work\github\pynlp\sequence-tagging\BERT-BiLSTM-CRF-NER\BERT-wwm'  #**[`BERT-base, Chinese (Whole Word Masking)`](https://drive.google.com/open?id=1RoTQsXp2hkQ1gSRVylRIJfQxJUgkfJMW)**:
+    root_path = 'F:\python_work\github\pynlp\sequence-tagging\BERT-BiLSTM-CRF-NER'
 else:
-    bert_path = '/home/macan/ml/data/chinese_L-12_H-768_A-12/'
-    root_path = '/home/macan/ml/workspace/BERT-BiLSTM-CRF-NER'
+    bert_path = '/home/sunshb/data/chinese_L-12_H-768_A-12/'
+    root_path = '/home/sunshb/pynlp/BERT-BiLSTM-CRF-NER'
 
 flags.DEFINE_string(
     "data_dir", os.path.join(root_path, 'NERdata'),
@@ -567,9 +566,7 @@ def main(_):
     }
 #     if not FLAGS.do_train and not FLAGS.do_eval:
 #         raise ValueError("At least one of `do_train` or `do_eval` must be True.")
-
     bert_config = modeling.BertConfig.from_json_file(FLAGS.bert_config_file)
-
     if FLAGS.max_seq_length > bert_config.max_position_embeddings:
         raise ValueError(
             "Cannot use sequence length %d because the BERT model "

@@ -3,8 +3,6 @@ Tensorflow solution of NER task Using BiLSTM-CRF model with Google BERT Fine-tun
 
 使用谷歌的BERT模型在BLSTM-CRF模型上进行预训练用于中文命名实体识别的Tensorflow代码'
 
-中文文档请查看https://blog.csdn.net/macanv/article/details/85684284  如果对您有帮助，麻烦点个star,谢谢~~  
-
 Welcome to star this repository!
 
 The Chinese training data($PATH/NERdata/) come from:https://github.com/zjy-ucas/ChineseNER 
@@ -21,6 +19,10 @@ Try to implement NER work based on google's BERT code and BiLSTM-CRF network!
 #### 1. Download BERT chinese model :  
  ```
  wget https://storage.googleapis.com/bert_models/2018_11_03/chinese_L-12_H-768_A-12.zip  
+ 
+ [or]
+ 
+ wget https://drive.google.com/open?id=1RoTQsXp2hkQ1gSRVylRIJfQxJUgkfJMW     [`BERT-base, Chinese (Whole Word Masking)`]
  ```
 #### 2. create output dir
 create output path in project path:
@@ -32,19 +34,16 @@ mkdir output
 ##### first method 
 ```
   python3 bert_lstm_ner.py   \
-                  --task_name="NER"  \ 
-                  --do_train=True   \
-                  --do_eval=True   \
+                  --task_name="NER"
+                  --do_train=True
+                  --do_eval=True
                   --do_predict=True
-                  --data_dir=NERdata   \
-                  --vocab_file=checkpoint/vocab.txt  \ 
-                  --bert_config_file=checkpoint/bert_config.json \  
-                  --init_checkpoint=checkpoint/bert_model.ckpt   \
-                  --max_seq_length=128   \
-                  --train_batch_size=32   \
-                  --learning_rate=2e-5   \
-                  --num_train_epochs=3.0   \
-                  --output_dir=./output/result_dir/ 
+                  --data_dir=NERdata
+                  --max_seq_length=128
+                  --train_batch_size=32
+                  --learning_rate=2e-5
+                  --num_train_epochs=3.0
+                  --output_dir=./output/result_dir/
  ```       
  ##### OR replace the BERT path and project path in bert_lstm_ner.py
  ```
@@ -55,7 +54,7 @@ else: # linux path config
     bert_path = '{your BERT model path}'
     root_path = '{project path}'
  ```
- Than Run:
+ Then Run:
  ```angular2html
 python3 bert_lstm_ner.py
 ```
@@ -144,4 +143,4 @@ def get_labels(self):
 
 + [https://github.com/zjy-ucas/ChineseNER](https://github.com/zjy-ucas/ChineseNER)
 
-> Any problem please email me(ma_cancan@163.com)
+> Any problem please email me(291952004@qq.com)
