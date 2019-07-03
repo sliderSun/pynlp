@@ -11,8 +11,8 @@ import numpy as np
 from collections import OrderedDict
 from pylab import *
 from gensim.models import word2vec
-from tflearn.data_utils import to_categorical, pad_sequences
-
+from keras.utils import to_categorical
+from keras.preprocessing.sequence import pad_sequences
 TEXT_DIR = '../data/content.txt'
 METADATA_DIR = '../data/metadata.tsv'
 

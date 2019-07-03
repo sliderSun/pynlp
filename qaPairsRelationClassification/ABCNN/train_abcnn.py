@@ -8,9 +8,9 @@ import logging
 import tensorflow as tf
 
 from tensorboard.plugins import projector
-from .text_abcnn import TextABCNN
-from ..utils import checkmate as cm
-from ..utils import data_helpers as dh
+from text_abcnn import TextABCNN
+from qaPairsRelationClassification.utils import checkmate as cm
+from qaPairsRelationClassification.utils import data_helpers as dh
 
 # Parameters
 # ==================================================
