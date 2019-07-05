@@ -10,7 +10,8 @@ class TextABCNN(object):
 
     def __init__(
             self, sequence_length, num_classes, vocab_size, fc_hidden_size, embedding_size,
-            embedding_type, filter_sizes, num_filters, l2_reg_lambda=0.0, pretrained_embedding=None):
+            embedding_type, filter_sizes, num_filters, l2_reg_lambda=0.0, pretrained_embedding=None,
+            learning_rate=0.001):
 
         # Placeholders for input, output, dropout_prob and training_tag
         self.input_x_front = tf.placeholder(tf.int32, [None, sequence_length], name="input_x_front")
@@ -277,8 +278,10 @@ class TextABCNN(object):
 
         # Calculate mean cross-entropy loss, L2 loss
         with tf.name_scope("loss"):
-            losses = tf.nn.softmax_cross_entropy_with_logits_v2(labels=self.input_y, logits=self.logits)
-            losses = tf.reduce_mean(losses, name="softmax_losses")
+
+            softmax = tf.nn.softmax(self.logits)
+            losses = -tf.reduce_mean(
+                self.input_y * tf.log(tf.clip_by_value(softmax, 1e-15, 1.0)))
             l2_losses = tf.add_n([tf.nn.l2_loss(tf.cast(v, tf.float32)) for v in tf.trainable_variables()],
                                  name="l2_losses") * l2_reg_lambda
             self.loss = tf.add(losses, l2_losses, name="loss")
@@ -319,3 +322,7 @@ class TextABCNN(object):
         # Calculate AUC
         with tf.name_scope("AUC"):
             self.AUC = tf.metrics.auc(self.softmax_scores, self.input_y, name="AUC")
+
+        with tf.name_scope('training'):
+            self.train_op = tf.train.AdamOptimizer(learning_rate).minimize(self.loss)
+        tf.add_to_collection('train_mini', self.train_op)
