@@ -8,13 +8,17 @@ from __future__ import division
 from __future__ import print_function
 
 import os
+import time
 from datetime import datetime
 
 import sys
-
+import tensorflow as tf
 import Config
 from Model import ESIM
 from utils import *
+
+from qaPairsRelationClassification.ESIM.utils import next_batch, print_log, get_time_diff, print_args, CATEGORIE_ID, \
+    normalize_embeddings, init_embeddings, load_embeddings, sentence2Index, count_parameters, load_vocab
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 

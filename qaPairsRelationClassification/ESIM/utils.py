@@ -360,5 +360,5 @@ def build_word_pos(dataPath, vocabPath, posPath, threshold=0, lowercase=True):
 
 if __name__ == '__main__':
     build_word_pos('F:\python_work\github\pynlp\qaPairsRelationClassification\ESIM\data\\train.txt',
-                   'F:\python_work\github\pynlp\qaPairsRelationClassification\ESIM\data\word.txt',
+                   'F:\python_work\github\pynlp\qaPairsRelationClassification\ESIM\data\\vocab.txt',
                    "F:\python_work\github\pynlp\qaPairsRelationClassification\ESIM\data\pos.txt")

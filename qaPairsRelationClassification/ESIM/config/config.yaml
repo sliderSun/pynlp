@@ -24,7 +24,7 @@ eval_batch: 1000
 # IO path
 ## embeddings
 vocab_path: ./data/vocab.txt
-word_path: ./data/word.txt
+word_path: ./data/vocab.txt
 pos_path: ./data/pos.txt
 #embedding_path : ./SNLI/data/embeddings.pkl
 
