@@ -20,7 +20,7 @@ import Config
 
 # testing
 from qaPairsRelationClassification.ESIM.utils import print_log, next_batch, get_time_diff, load_vocab, load_embeddings, \
-    init_embeddings, normalize_embeddings, CATEGORIE_ID, print_args
+    init_embeddings, normalize_embeddings, CATEGORIE_ID, print_args, sentence2Index
 
 
 def predict():

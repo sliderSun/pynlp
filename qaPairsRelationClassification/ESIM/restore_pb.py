@@ -8,12 +8,16 @@ from __future__ import division
 from __future__ import print_function
 
 import sys
+import time
 from datetime import datetime
-
+import tensorflow as tf
 from sklearn.metrics import f1_score
-
+import numpy as np
 import Config
 from utils import *
+
+from qaPairsRelationClassification.ESIM.utils import print_log, print_args, get_time_diff, CATEGORIE_ID, next_batch, \
+    sentence2Index, load_vocab
 
 sess = tf.Session()
 with tf.gfile.GFile("F:\python_work\siamese-lstm-network\ESIM\esim_model.pb", 'rb') as f:  # 加载模型
