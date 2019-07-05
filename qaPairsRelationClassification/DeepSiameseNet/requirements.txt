@@ -1,0 +1,3 @@
+scikit-learn
+numpy
+tensorflow==1.12.0
