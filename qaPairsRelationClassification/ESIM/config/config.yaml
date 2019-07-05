@@ -1,0 +1,44 @@
+# training hyper-parameters
+num_epochs: 300
+batch_size: 64
+dropout_keep_prob: 0.5
+clip_value: 10
+learning_rate: 0.0004
+l2: 0.001
+seq_length: 30
+optimizer: adam
+early_stop_step: 5000000
+
+# embeddings hyper-parameters
+threshold: 0
+embedding_size: 512
+embedding_normalize: 1
+
+# layers hyper-parameters
+hidden_size: 300
+attention_size: 300
+
+# report hyper-parameters
+eval_batch: 1000
+
+# IO path
+## embeddings
+vocab_path: ./data/vocab.txt
+word_path: ./data/word.txt
+pos_path: ./data/pos.txt
+#embedding_path : ./SNLI/data/embeddings.pkl
+
+## dataset
+trainset_path: ./data/train.txt
+devset_path: ./data/dev.txt
+testset_path: ./data/test
+
+## reports
+save_path: ./model/checkpoint
+best_path: ./model_best/check
+best_model_path: ./model/checkpoint_dev_loss_0.3141.ckpt
+log_path: ./config/
+tfboard_path: ./tensorboard
+
+## config
+config_path: ./config/config.yaml
