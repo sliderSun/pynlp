@@ -69,7 +69,7 @@ def init():
     train_ans = {}  # {entity pair:[label1,label2,...]} the label is one-hot vector
 
     print('reading train data...')
-    f = open('./origin_data/train.txt', 'r', encoding='utf-8')
+    f = open('./origin_data/Train.txt', 'r', encoding='utf-8')
 
     while True:
         content = f.readline()
@@ -214,7 +214,7 @@ def init():
     test_y = []
 
     print('organizing train data')
-    f = open('./origin_data/train.txt', 'w', encoding='utf-8')
+    f = open('./origin_data/Train.txt', 'w', encoding='utf-8')
     temp = 0
     for i in train_sen:
         if len(train_ans[i]) != len(train_sen[i]):
