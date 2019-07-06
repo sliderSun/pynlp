@@ -7,7 +7,7 @@ The main objective of the project is to determine whether the two sentences are 
 ## Requirements
 
 - Python 3.6
-- Tensorflow 1.8 +
+- Tensorflow 1.12 +
 - Numpy
 - Gensim
 
@@ -164,14 +164,39 @@ References:
 
 ---
 
-## About Me
+### DeepSiamesNet
 
-黄威，Randolph
+#### TODO
 
-SCU SE Bachelor; USTC CS Master
+1. Add DeepSiamesNet model.
 
-Email: chinawolfman@hotmail.com
+References:
 
-My Blog: [randolph.pro](http://randolph.pro)
+- [Learning a Similarity Metric Discriminatively, with Application to Face Verification]
 
-LinkedIn: [randolph's linkedin](https://www.linkedin.com/in/randolph-%E9%BB%84%E5%A8%81/)
+---
+
+
+### ESIM
+
+#### TODO
+
+1. Add ESIM model.
+
+References:
+
+- [Enhanced LSTM for Natural Language Inference](https://arxiv.org/pdf/1609.06038.pdf)
+
+---
+
+### Bert
+
+#### TODO
+
+1. Add Bert model.
+
+References:
+
+- [BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding](https://arxiv.org/pdf/1810.04805.pdf)
+
+---
