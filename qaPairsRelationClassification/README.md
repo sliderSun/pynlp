@@ -7,7 +7,7 @@ The main objective of the project is to determine whether the two sentences are 
 ## Requirements
 
 - Python 3.6
-- Tensorflow 1.12 +
+- Tensorflow 1.12
 - Numpy
 - Gensim
 
@@ -28,11 +28,15 @@ The main objective of the project is to determine whether the two sentences are 
 7. Add several performance measures(especially the **AUC**) since the data is imbalanced.
 
 ### Code part
-1. Can choose to **train** the model directly or **restore** the model from checkpoint in `train.py`.
-2. Add `test.py`, the **model test code**, it can show the predict value of label of the data in Testset when create the final prediction file.
-3. Add other useful data preprocess functions in `data_helpers.py`.
-4. Use `logging` for helping recording the whole info(including parameters display, model training info, etc.).
-5. Provide the ability to save the best n checkpoints in `checkmate.py`, whereas the `tf.train.Saver` can only save the last n checkpoints.
+0. 生成字向量 utils/ `python load_data.py`
+1. 词向量的训练 word2vec/
+
+    静态词向量，请执行:
+`python word2vec_static.py`，该版本是采用gensim来训练词向量
+
+    动态词向量，请执行:
+`python word2vec_dynamic.py`，该版本是采用tensorflow来训练词向量，训练完成后会保存embedding矩阵、词典和词向量在二维矩阵的相对位置的图片，
+2. run `python train.py` to train   or   run `python test.py` to test
 
 ## Data
 
@@ -46,7 +50,6 @@ You can use `jieba` package if you are going to deal with the chinese text data.
 
 This repository can be used in other datasets(text pairs similarity classification) by two ways:
 1. Modify your datasets into the same format of the sample.
-2. Modify the data preprocess code in `data_helpers.py`.
 
 Anyway, it should depends on what your data and task are.
 
@@ -58,16 +61,6 @@ You can pre-training your word vectors(based on your corpus) in many ways:
 - Even can use a **fasttext** network to pre-train data.
 
 ## Network Structure
-
-### FastText
-
-![](https://farm2.staticflickr.com/1941/30719403327_46e528826d_o.png)
-
-References:
-
-- [Bag of Tricks for Efficient Text Classification](https://arxiv.org/pdf/1607.01759.pdf)
-
----
 
 ### TextANN
 
@@ -129,6 +122,7 @@ References:
 ---
 
 ### TextHAN
+![](https://github.com/sliderSun/pynlp/blob/master/qaPairsRelationClassification/image/TextHAN.jpg)
 
 References:
 
@@ -137,6 +131,8 @@ References:
 ---
 
 ### TextSANN
+
+![](https://github.com/sliderSun/pynlp/blob/master/qaPairsRelationClassification/image/TextSANN.jpg)
 
 **Warning: Model can use but not finished yet 🤪!**
 
@@ -152,6 +148,10 @@ References:
 
 ### TextABCNN
 
+![](https://github.com/sliderSun/pynlp/blob/master/qaPairsRelationClassification/image/ABCNN-1.jpg)
+![](https://github.com/sliderSun/pynlp/blob/master/qaPairsRelationClassification/image/ABCNN-2.jpg)
+![](https://github.com/sliderSun/pynlp/blob/master/qaPairsRelationClassification/image/ABCNN-3.jpg)
+
 **Warning: Only achieve the ABCNN-1 Model🤪!**
 
 #### TODO
@@ -165,6 +165,7 @@ References:
 ---
 
 ### DeepSiamesNet
+![](https://github.com/sliderSun/pynlp/blob/master/qaPairsRelationClassification/image/DSN.jpg)
 
 #### TODO
 
@@ -172,7 +173,7 @@ References:
 
 References:
 
-- [Learning a Similarity Metric Discriminatively, with Application to Face Verification]
+- [Learning Text Similarity with Siamese Recurrent Networks](https://www.aclweb.org/anthology/W16-1617)
 
 ---
 
