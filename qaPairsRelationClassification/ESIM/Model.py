@@ -120,7 +120,7 @@ class ESIM(object):
                                                      dtype=tf.float32)
             return output
 
-    # input encoding block ("3.1 Input Encoding" in paper)
+    # data encoding block ("3.1 Input Encoding" in paper)
     def _inputEncodingBlock(self, scope):
         """
         :param scope: scope name

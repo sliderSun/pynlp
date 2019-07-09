@@ -25,7 +25,7 @@ import tensorflow as tf
 
 
 def convert_to_unicode(text):
-  """Converts `text` to Unicode (if it's not already), assuming utf-8 input."""
+  """Converts `text` to Unicode (if it's not already), assuming utf-8 data."""
   if six.PY3:
     if isinstance(text, str):
       return text
@@ -138,7 +138,7 @@ class BasicTokenizer(object):
     """Constructs a BasicTokenizer.
 
     Args:
-      do_lower_case: Whether to lower case the input.
+      do_lower_case: Whether to lower case the data.
     """
     self.do_lower_case = do_lower_case
 
@@ -261,7 +261,7 @@ class WordpieceTokenizer(object):
     using the given vocabulary.
 
     For example:
-      input = "unaffable"
+      data = "unaffable"
       output = ["un", "##aff", "##able"]
 
     Args:

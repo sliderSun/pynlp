@@ -13,7 +13,7 @@ class TextRCNN(object):
             self, sequence_length, num_classes, vocab_size, lstm_hidden_size, fc_hidden_size, embedding_size,
             embedding_type, filter_sizes, num_filters, l2_reg_lambda=0.0, pretrained_embedding=None):
 
-        # Placeholders for input, output, dropout_prob and training_tag
+        # Placeholders for data, output, dropout_prob and training_tag
         self.input_x_front = tf.placeholder(tf.int32, [None, sequence_length], name="input_x_front")
         self.input_x_behind = tf.placeholder(tf.int32, [None, sequence_length], name="input_x_behind")
         self.input_y = tf.placeholder(tf.float32, [None, num_classes], name="input_y")
@@ -83,7 +83,7 @@ class TextRCNN(object):
             self.embedded_sentence_behind = tf.nn.embedding_lookup(self.embedding, self.input_x_behind)
 
         # Add dropout
-        with tf.name_scope("dropout-input"):
+        with tf.name_scope("dropout-data"):
             self.embedded_sentence_front_drop = tf.nn.dropout(self.embedded_sentence_front, self.dropout_keep_prob)
             self.embedded_sentence_behind_drop = tf.nn.dropout(self.embedded_sentence_behind, self.dropout_keep_prob)
 

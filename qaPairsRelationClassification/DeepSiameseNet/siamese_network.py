@@ -172,7 +172,7 @@ class SiameseNet(object):
         return outputs
 
     def __init__(self, config, vocab_size):
-        # Placeholders for input, output and dropout
+        # Placeholders for data, output and dropout
         self.config = config
         self.input_x1 = tf.placeholder(tf.int32, [None, self.config.max_document_length], name="input_x1")
         self.input_x2 = tf.placeholder(tf.int32, [None, self.config.max_document_length], name="input_x2")

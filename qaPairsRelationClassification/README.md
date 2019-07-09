@@ -122,6 +122,7 @@ References:
 ---
 
 ### TextHAN
+
 ![](https://github.com/sliderSun/pynlp/blob/master/qaPairsRelationClassification/image/TextHAN.jpg)
 
 References:
@@ -165,6 +166,7 @@ References:
 ---
 
 ### DeepSiamesNet
+
 ![](https://github.com/sliderSun/pynlp/blob/master/qaPairsRelationClassification/image/DSN.jpg)
 
 #### TODO
@@ -177,8 +179,24 @@ References:
 
 ---
 
+### DSSM
+
+![](https://github.com/sliderSun/pynlp/blob/master/qaPairsRelationClassification/image/DSSM.jpg)
+
+#### TODO
+
+1. Add DSSM model.
+
+References:
+
+- [Learning Deep Structured Semantic Models for Web Search using Clickthrough Data]
+
+---
+
 
 ### ESIM
+
+![](https://github.com/sliderSun/pynlp/blob/master/qaPairsRelationClassification/image/ESIM.jpg)
 
 #### TODO
 
@@ -189,6 +207,47 @@ References:
 - [Enhanced LSTM for Natural Language Inference](https://arxiv.org/pdf/1609.06038.pdf)
 
 ---
+
+### BIMPM
+
+![](https://github.com/sliderSun/pynlp/blob/master/qaPairsRelationClassification/image/BIMPM.jpg)
+
+#### TODO
+
+1. Add BIMPM model.
+
+References:
+
+- [BilateralMulti-PerspectiveMatchingforNaturalLanguageSentences](http://tongtianta.site/paper/1759)
+
+---
+### DIIN
+
+![](https://github.com/sliderSun/pynlp/blob/master/qaPairsRelationClassification/image/DIIN.jpg)
+
+#### TODO
+
+1. Add DIIN model.
+
+References:
+
+- [Natural Language Inference Over Interaction Space(DIIN)](https://arxiv.org/pdf/1709.04348v1.pdf)
+
+---
+### DRCN
+
+![](https://github.com/sliderSun/pynlp/blob/master/qaPairsRelationClassification/image/DRCN.jpg)
+
+#### TODO
+
+1. Add DRCN model.
+
+References:
+
+- [Deep Reconstruction-Classification Networks for Unsupervised Domain Adaptation](https://arxiv.org/pdf/1607.03516.pdf)
+
+---
+
 
 ### Bert
 

@@ -33,7 +33,7 @@ FLAGS = flags.FLAGS
 ## Required parameters
 flags.DEFINE_string(
     "data_dir", None,
-    "The input data dir. Should contain the .tsv files (or other data files) "
+    "The data data dir. Should contain the .tsv files (or other data files) "
     "for the task.")
 
 flags.DEFINE_string(
@@ -61,12 +61,12 @@ flags.DEFINE_string(
 
 flags.DEFINE_bool(
     "do_lower_case", True,
-    "Whether to lower case the input text. Should be True for uncased "
+    "Whether to lower case the data text. Should be True for uncased "
     "models and False for cased models.")
 
 flags.DEFINE_integer(
     "max_seq_length", 128,
-    "The maximum total input sequence length after WordPiece tokenization. "
+    "The maximum total data sequence length after WordPiece tokenization. "
     "Sequences longer than this will be truncated, and sequences shorter "
     "than this will be padded.")
 
@@ -405,7 +405,7 @@ def file_based_input_fn_builder(input_file, seq_length, is_training,
         return example
 
     def input_fn(params):
-        """The actual input function."""
+        """The actual data function."""
         batch_size = params["batch_size"]
 
         # For training, we want a lot of parallel reading and shuffling.
@@ -595,7 +595,7 @@ def input_fn_builder(features, seq_length, is_training, drop_remainder):
         all_label_ids.append(feature.label_id)
 
     def input_fn(params):
-        """The actual input function."""
+        """The actual data function."""
         batch_size = params["batch_size"]
 
         num_examples = len(features)

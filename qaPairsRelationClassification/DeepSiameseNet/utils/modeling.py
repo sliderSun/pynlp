@@ -151,7 +151,7 @@ class BertModel(object):
       scope: (optional) variable scope. Defaults to "bert".
 
     Raises:
-      ValueError: The config is invalid or one of the input tensor shapes
+      ValueError: The config is invalid or one of the data tensor shapes
         is invalid.
     """
     config = copy.deepcopy(config)
@@ -248,13 +248,13 @@ class BertModel(object):
     return self.all_encoder_layers
 
   def get_embedding_output(self):
-    """Gets output of the embedding lookup (i.e., input to the transformer).
+    """Gets output of the embedding lookup (i.e., data to the transformer).
 
     Returns:
       float Tensor of shape [batch_size, seq_length, hidden_size] corresponding
       to the output of the embedding layer, after summing the word
       embeddings with the positional embeddings and the token type embeddings,
-      then performing layer normalization. This is the input to the transformer.
+      then performing layer normalization. This is the data to the transformer.
     """
     return self.embedding_output
 
@@ -400,10 +400,10 @@ def embedding_lookup(input_ids,
   Returns:
     float Tensor of shape [batch_size, seq_length, embedding_size].
   """
-  # This function assumes that the input is of shape [batch_size, seq_length,
+  # This function assumes that the data is of shape [batch_size, seq_length,
   # num_inputs].
   #
-  # If the input is a 2D tensor of shape [batch_size, seq_length], we
+  # If the data is a 2D tensor of shape [batch_size, seq_length], we
   # reshape to [batch_size, seq_length, 1].
   if input_ids.shape.ndims == 2:
     input_ids = tf.expand_dims(input_ids, axis=[-1])
@@ -462,7 +462,7 @@ def embedding_postprocessor(input_tensor,
     float tensor with same shape as `input_tensor`.
 
   Raises:
-    ValueError: One of the tensor shapes or input values is invalid.
+    ValueError: One of the tensor shapes or data values is invalid.
   """
   input_shape = get_shape_list(input_tensor, expected_rank=3)
   batch_size = input_shape[0]
@@ -611,11 +611,11 @@ def attention_layer(from_tensor,
       * from_seq_length, num_attention_heads * size_per_head]. If False, the
       output will be of shape [batch_size, from_seq_length, num_attention_heads
       * size_per_head].
-    batch_size: (Optional) int. If the input is 2D, this might be the batch size
+    batch_size: (Optional) int. If the data is 2D, this might be the batch size
       of the 3D version of the `from_tensor` and `to_tensor`.
-    from_seq_length: (Optional) If the input is 2D, this might be the seq length
+    from_seq_length: (Optional) If the data is 2D, this might be the seq length
       of the 3D version of the `from_tensor`.
-    to_seq_length: (Optional) If the input is 2D, this might be the seq length
+    to_seq_length: (Optional) If the data is 2D, this might be the seq length
       of the 3D version of the `to_tensor`.
 
   Returns:
@@ -812,10 +812,10 @@ def transformer_model(input_tensor,
   seq_length = input_shape[1]
   input_width = input_shape[2]
 
-  # The Transformer performs sum residuals on all layers so the input needs
+  # The Transformer performs sum residuals on all layers so the data needs
   # to be the same as the hidden size.
   if input_width != hidden_size:
-    raise ValueError("The width of the input tensor (%d) != hidden size (%d)" %
+    raise ValueError("The width of the data tensor (%d) != hidden size (%d)" %
                      (input_width, hidden_size))
 
   # We keep the representation as a 2D tensor to avoid re-shaping it back and

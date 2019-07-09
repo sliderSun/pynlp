@@ -56,7 +56,7 @@ class ModelConfig():
                                    '-sl',
                                    default=100,
                                    type=int,
-                                   help='Max length of input sentence')
+                                   help='Max length of data sentence')
         self.__parser.add_argument('--optimizer',
                                    '-op',
                                    default='adam',
