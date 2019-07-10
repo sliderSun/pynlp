@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # HierarchicalAttention: 1.Word Encoder. 2.Word Attention. 3.Sentence Encoder 4.Sentence Attention 5.linear classifier. 2017-06-13
-import tensorflow as tf
 import numpy as np
+import tensorflow as tf
 import tensorflow.contrib as tf_contrib
-from  a2_multi_head_attention import MultiHeadAttention
-from a2_poistion_wise_feed_forward import PositionWiseFeedFoward
+from a2_multi_head_attention import MultiHeadAttention
+
+
 class HierarchicalAttention:
     def __init__(self, num_classes, learning_rate, batch_size, decay_steps, decay_rate, sequence_length, num_sentences,
                  vocab_size, embed_size,
