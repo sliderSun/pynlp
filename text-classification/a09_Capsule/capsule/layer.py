@@ -1,10 +1,12 @@
 import tensorflow as tf
 import keras
 from keras import backend as K
-from utils import _conv2d_wrapper, _get_weights_wrapper
+
+from capsule.utils import _get_weights_wrapper, _conv2d_wrapper
+
 
 def softmax(x, axis=-1):
-    ex = K.exp(x - K.max(x, axis=axis, keepdims=True))
+    ex = tf.exp(x - K.max(x, axis=axis, keepdims=True))
     return ex/K.sum(ex, axis=axis, keepdims=True)
 
 def squash_v1(x, axis=-1):
@@ -131,7 +133,7 @@ def capsule_flatten(nets):
     input_pose_shape = poses.get_shape().as_list()
     
     poses = tf.reshape(poses, [
-                    -1, input_pose_shape[1]*input_pose_shape[2]*input_pose_shape[3], input_pose_shape[-1]]) 
+                    -1, input_pose_shape[1]*input_pose_shape[2]*input_pose_shape[3], input_pose_shape[-1]])
     activations = tf.reshape(activations, [
                     -1, input_pose_shape[1]*input_pose_shape[2]*input_pose_shape[3]])
     tf.logging.info("flatten poses dimension:{}".format(poses.get_shape()))
@@ -191,14 +193,14 @@ def capsule_conv_layer(nets, shape, strides, iterations, name):
                 )
         poses, activations = routing(u_hat_vecs, beta_a, iterations, shape[3], i_activations_patches)
         poses = tf.reshape(poses, [
-                    inputs_poses_shape[0], inputs_poses_shape[1],
+                    -1, inputs_poses_shape[1],
                     inputs_poses_shape[2], shape[3],
                     inputs_poses_shape[-1]]
-                ) 
+                )
         activations = tf.reshape(activations, [
-                    inputs_poses_shape[0],inputs_poses_shape[1],
+                    -1,inputs_poses_shape[1],
                     inputs_poses_shape[2],shape[3]]
-                ) 
+                )
         nets = poses, activations            
     tf.logging.info("capsule conv poses dimension:{}".format(poses.get_shape()))
     tf.logging.info("capsule conv activations dimension:{}".format(activations.get_shape()))

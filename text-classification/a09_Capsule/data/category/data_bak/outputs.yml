@@ -1,0 +1,2 @@
+y_pred_cls: output/predictions
+y_pred_prob: output/prediction_prob
