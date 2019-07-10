@@ -2,17 +2,18 @@
 #training the model.
 #process--->1.load data(X:list of lint,y:int). 2.create session. 3.feed data. 4.training (5.validation) ,(6.prediction)
 import sys
+
+import gensim
+
 reload(sys)
 sys.setdefaultencoding('utf8')
 import tensorflow as tf
 import numpy as np
 from a3_entity_network import EntityNetwork
-#from aa1_data_util.\
+#from data_util.\
 from data_util_zhihu import load_data_multilabel_new,create_voabulary,create_voabulary_label
-from tflearn.data_utils import to_categorical, pad_sequences
+from tflearn.data_utils import pad_sequences
 import os,math
-import word2vec
-import pickle
 
 #configuration
 FLAGS=tf.flags.FLAGS
@@ -146,14 +147,14 @@ def main(_):
 def assign_pretrained_word_embedding(sess,vocabulary_index2word,vocab_size,model,word2vec_model_path=None):
     print("using pre-trained word emebedding.started.word2vec_model_path:",word2vec_model_path)
     # word2vecc=word2vec.load('word_embedding.txt') #load vocab-vector fiel.word2vecc['w91874']
-    word2vec_model = word2vec.load(word2vec_model_path, kind='bin')
+    word2vec_model = gensim.models.KeyedVectors.load_word2vec_format(word2vec_model_path, binary=True)
     word2vec_dict = {}
     for word, vector in zip(word2vec_model.vocab, word2vec_model.vectors):
         word2vec_dict[word] = vector
     word_embedding_2dlist = [[]] * vocab_size  # create an empty word_embedding list.
     word_embedding_2dlist[0] = np.zeros(FLAGS.embed_size)  # assign empty for first word:'PAD'
     bound = np.sqrt(6.0) / np.sqrt(vocab_size)  # bound for random variables.
-    count_exist = 0;
+    count_exist = 0
     count_not_exist = 0
     for i in range(1, vocab_size):  # loop each word
         word = vocabulary_index2word[i]  # get a word
@@ -163,15 +164,15 @@ def assign_pretrained_word_embedding(sess,vocabulary_index2word,vocab_size,model
         except Exception:
             embedding = None
         if embedding is not None:  # the 'word' exist a embedding
-            word_embedding_2dlist[i] = embedding;
+            word_embedding_2dlist[i] = embedding
             count_exist = count_exist + 1  # assign array to this word.
         else:  # no embedding for this word
-            word_embedding_2dlist[i] = np.random.uniform(-bound, bound, FLAGS.embed_size);
+            word_embedding_2dlist[i] = np.random.uniform(-bound, bound, FLAGS.embed_size)
             count_not_exist = count_not_exist + 1  # init a random value for the word.
     word_embedding_final = np.array(word_embedding_2dlist)  # covert to 2d array.
     word_embedding = tf.constant(word_embedding_final, dtype=tf.float32)  # convert to tensor
     t_assign_embedding = tf.assign(model.Embedding,word_embedding)  # assign this value to our embedding variables of our model.
-    sess.run(t_assign_embedding);
+    sess.run(t_assign_embedding)
     print("word. exists embedding:", count_exist, " ;word not exist embedding:", count_not_exist)
     print("using pre-trained word emebedding.ended...")
 
