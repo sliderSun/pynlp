@@ -8,10 +8,9 @@ import tensorflow as tf
 import numpy as np
 #from p5_fastTextB_model import fastTextB as fastText
 from data_util_zhihu import load_data_predict,load_final_test_data,create_voabulary,create_voabulary_label
-from tflearn.data_utils import pad_sequences #to_categorical
+from keras.preprocessing.sequence import pad_sequences #to_categorical
 import os
 import codecs
-from p7_TextCNN_model import TextCNN
 from a1_seq2seq_attention_model import seq2seq_attention_model
 
 #configuration
