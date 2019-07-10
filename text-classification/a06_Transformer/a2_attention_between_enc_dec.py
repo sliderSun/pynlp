@@ -6,10 +6,12 @@ and the memory keys and values come from the output of the encoder. This allows 
 position in the decoder to attend over all positions in the input sequence. This mimics the
 typical encoder-decoder attention mechanisms in sequence-to-sequence models.
 """
+import time
+
 import tensorflow as tf
 from a2_base_model import BaseClass
-from  a2_multi_head_attention import MultiHeadAttention
-import time
+
+
 class AttentionEncoderDecoder(BaseClass):
     def __init__(self,d_model, d_k, d_v, sequence_length, h, batch_size,Q, K_s,layer_index,decoder_sent_length,type="attention",mask=None,dropout_keep_prob=None):
         """

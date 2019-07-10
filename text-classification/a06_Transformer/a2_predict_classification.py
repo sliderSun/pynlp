@@ -8,7 +8,7 @@ import tensorflow as tf
 import numpy as np
 from a2_transformer_classification import  Transformer
 from data_util_zhihu import load_data_predict,load_final_test_data,create_voabulary,create_voabulary_label
-from tflearn.data_utils import pad_sequences #to_categorical
+from keras.preprocessing.sequence import pad_sequences #to_categorical
 import os
 import codecs
 

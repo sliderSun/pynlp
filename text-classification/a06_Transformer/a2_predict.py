@@ -8,7 +8,7 @@ import tensorflow as tf
 import numpy as np
 from a07_Transformer import  Transformer
 from data_util_zhihu import load_data_predict,load_final_test_data,create_voabulary,create_voabulary_label
-from tflearn.data_utils import pad_sequences #to_categorical
+from keras.preprocessing.sequence import pad_sequences #to_categorical
 import os
 import codecs
 
@@ -99,7 +99,6 @@ def main(_):
             #                                   })
             #    decoder_input[:,j] = predict[:,j]
            ####################################################################################
-            print("===============>",start,"predict:",predict)
             # 6. get lable using logtis
             for _,logit in enumerate(logits):
                 predicted_labels=get_label_using_logits(logit,predictions,vocabulary_index2word_label,vocabulary_word2index_label)
