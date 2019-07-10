@@ -15,31 +15,31 @@ import word2vec
 import pickle
 
 #configuration
-FLAGS=tf.app.flags.FLAGS
-tf.app.flags.DEFINE_integer("num_classes",1999,"number of label") #3 ADDITIONAL TOKEN: _GO,_END,_PAD
-tf.app.flags.DEFINE_float("learning_rate",0.015,"learning rate")
-tf.app.flags.DEFINE_integer("batch_size", 256, "Batch size for training/evaluating.") #批处理的大小 32-->128
-tf.app.flags.DEFINE_integer("decay_steps", 12000, "how many steps before decay learning rate.") #6000批处理的大小 32-->128
-tf.app.flags.DEFINE_float("decay_rate", 1.0, "Rate of decay for learning rate.") #0.87一次衰减多少
-tf.app.flags.DEFINE_string("ckpt_dir","../checkpoint_dynamic_memory_network/","checkpoint location for the model")
-tf.app.flags.DEFINE_integer("sequence_length",60,"max sentence length") #100
-tf.app.flags.DEFINE_integer("embed_size",100,"embedding size")
-tf.app.flags.DEFINE_boolean("is_training",True,"is traning.true:tranining,false:testing/inference")
-tf.app.flags.DEFINE_integer("num_epochs",16,"number of epochs to run.")
-tf.app.flags.DEFINE_integer("validate_every", 1, "Validate every validate_every epochs.") #每10轮做一次验证
-tf.app.flags.DEFINE_integer("validate_step", 2000, "how many step to validate.") #1500做一次检验
-tf.app.flags.DEFINE_boolean("use_embedding",True,"whether to use embedding or not.")
-tf.app.flags.DEFINE_string("traning_data_path","../train-zhihu4-only-title-all.txt","path of traning data.") #O.K.train-zhihu4-only-title-all.txt-->training-data/test-zhihu4-only-title.txt--->'training-data/train-zhihu5-only-title-multilabel.txt'
-tf.app.flags.DEFINE_string("word2vec_model_path","../zhihu-word2vec-title-desc.bin-100","word2vec's vocabulary and vectors") #zhihu-word2vec.bin-100-->zhihu-word2vec-multilabel-minicount15.bin-100
-tf.app.flags.DEFINE_boolean("multi_label_flag",True,"use multi label or single label.") #set this false. becase we are using it is a sequence of token here.
-tf.app.flags.DEFINE_integer("hidden_size",100,"hidden size")
-tf.app.flags.DEFINE_integer("story_length",1,"story length")
+FLAGS=tf.flags.FLAGS
+tf.flags.DEFINE_integer("num_classes",1999,"number of label") #3 ADDITIONAL TOKEN: _GO,_END,_PAD
+tf.flags.DEFINE_float("learning_rate",0.015,"learning rate")
+tf.flags.DEFINE_integer("batch_size", 256, "Batch size for training/evaluating.") #批处理的大小 32-->128
+tf.flags.DEFINE_integer("decay_steps", 12000, "how many steps before decay learning rate.") #6000批处理的大小 32-->128
+tf.flags.DEFINE_float("decay_rate", 1.0, "Rate of decay for learning rate.") #0.87一次衰减多少
+tf.flags.DEFINE_string("ckpt_dir","../checkpoint_dynamic_memory_network/","checkpoint location for the model")
+tf.flags.DEFINE_integer("sequence_length",60,"max sentence length") #100
+tf.flags.DEFINE_integer("embed_size",100,"embedding size")
+tf.flags.DEFINE_boolean("is_training",True,"is traning.true:tranining,false:testing/inference")
+tf.flags.DEFINE_integer("num_epochs",16,"number of epochs to run.")
+tf.flags.DEFINE_integer("validate_every", 1, "Validate every validate_every epochs.") #每10轮做一次验证
+tf.flags.DEFINE_integer("validate_step", 2000, "how many step to validate.") #1500做一次检验
+tf.flags.DEFINE_boolean("use_embedding",True,"whether to use embedding or not.")
+tf.flags.DEFINE_string("traning_data_path","../train-zhihu4-only-title-all.txt","path of traning data.") #O.K.train-zhihu4-only-title-all.txt-->training-data/test-zhihu4-only-title.txt--->'training-data/train-zhihu5-only-title-multilabel.txt'
+tf.flags.DEFINE_string("word2vec_model_path","../zhihu-word2vec-title-desc.bin-100","word2vec's vocabulary and vectors") #zhihu-word2vec.bin-100-->zhihu-word2vec-multilabel-minicount15.bin-100
+tf.flags.DEFINE_boolean("multi_label_flag",True,"use multi label or single label.") #set this false. becase we are using it is a sequence of token here.
+tf.flags.DEFINE_integer("hidden_size",100,"hidden size")
+tf.flags.DEFINE_integer("story_length",1,"story length")
 # you can do experiment by change below two hyperparameter, performance may be changed.
-tf.app.flags.DEFINE_boolean("use_gated_gru",False,"whether to use gated gru as  memory update mechanism. if false,use weighted sum of candidate sentences according to gate")
-tf.app.flags.DEFINE_integer("num_pass",2,"number of pass to run") #e.g. num_pass=1,2,3,4.
-tf.app.flags.DEFINE_float("l2_lambda", 0.0001, "l2 regularization")
+tf.flags.DEFINE_boolean("use_gated_gru",False,"whether to use gated gru as  memory update mechanism. if false,use weighted sum of candidate sentences according to gate")
+tf.flags.DEFINE_integer("num_pass",2,"number of pass to run") #e.g. num_pass=1,2,3,4.
+tf.flags.DEFINE_float("l2_lambda", 0.0001, "l2 regularization")
 
-tf.app.flags.DEFINE_boolean("decode_with_sequences",False,"if your task is sequence generating, you need to set this true.default is false, for predict a label")
+tf.flags.DEFINE_boolean("decode_with_sequences",False,"if your task is sequence generating, you need to set this true.default is false, for predict a label")
 
 #1.load data(X:list of lint,y:int). 2.create session. 3.feed data. 4.training (5.validation) ,(6.prediction)
 def main(_):

@@ -14,21 +14,21 @@ import word2vec
 import pickle
 
 #configuration
-FLAGS=tf.app.flags.FLAGS
-tf.app.flags.DEFINE_integer("label_size",1999,"number of label")
-tf.app.flags.DEFINE_float("learning_rate",0.01,"learning rate")
-tf.app.flags.DEFINE_integer("batch_size", 128, "Batch size for training/evaluating.") #批处理的大小 32-->128
-tf.app.flags.DEFINE_integer("decay_steps", 20000, "how many steps before decay learning rate.") #批处理的大小 32-->128
-tf.app.flags.DEFINE_float("decay_rate", 0.8, "Rate of decay for learning rate.") #0.5一次衰减多少
-tf.app.flags.DEFINE_integer("num_sampled",50,"number of noise sampling") #100
-tf.app.flags.DEFINE_string("ckpt_dir","fast_text_checkpoint/","checkpoint location for the model")
-tf.app.flags.DEFINE_integer("sentence_len",200,"max sentence length")
-tf.app.flags.DEFINE_integer("embed_size",100,"embedding size")
-tf.app.flags.DEFINE_boolean("is_training",True,"is traning.true:tranining,false:testing/inference")
-tf.app.flags.DEFINE_integer("num_epochs",15,"embedding size")
-tf.app.flags.DEFINE_integer("validate_every", 1, "Validate every validate_every epochs.") #每10轮做一次验证
-tf.app.flags.DEFINE_boolean("use_embedding",True,"whether to use embedding or not.")
-tf.app.flags.DEFINE_string("cache_path","fast_text_checkpoint/data_cache.pik","checkpoint location for the model")
+FLAGS=tf.flags.FLAGS
+tf.flags.DEFINE_integer("label_size",1999,"number of label")
+tf.flags.DEFINE_float("learning_rate",0.01,"learning rate")
+tf.flags.DEFINE_integer("batch_size", 128, "Batch size for training/evaluating.") #批处理的大小 32-->128
+tf.flags.DEFINE_integer("decay_steps", 20000, "how many steps before decay learning rate.") #批处理的大小 32-->128
+tf.flags.DEFINE_float("decay_rate", 0.8, "Rate of decay for learning rate.") #0.5一次衰减多少
+tf.flags.DEFINE_integer("num_sampled",50,"number of noise sampling") #100
+tf.flags.DEFINE_string("ckpt_dir","fast_text_checkpoint/","checkpoint location for the model")
+tf.flags.DEFINE_integer("sentence_len",200,"max sentence length")
+tf.flags.DEFINE_integer("embed_size",100,"embedding size")
+tf.flags.DEFINE_boolean("is_training",True,"is traning.true:tranining,false:testing/inference")
+tf.flags.DEFINE_integer("num_epochs",15,"embedding size")
+tf.flags.DEFINE_integer("validate_every", 1, "Validate every validate_every epochs.") #每10轮做一次验证
+tf.flags.DEFINE_boolean("use_embedding",True,"whether to use embedding or not.")
+tf.flags.DEFINE_string("cache_path","fast_text_checkpoint/data_cache.pik","checkpoint location for the model")
 
 #1.load data(X:list of lint,y:int). 2.create session. 3.feed data. 4.training (5.validation) ,(6.prediction)
 def main(_):

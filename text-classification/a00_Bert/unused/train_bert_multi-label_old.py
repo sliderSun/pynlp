@@ -14,23 +14,23 @@ import numpy as np
 from ..utils import load_data,init_label_dict,get_label_using_logits,get_target_label_short,compute_confuse_matrix,\
     compute_micro_macro,compute_confuse_matrix_batch,get_label_using_logits_batch,get_target_label_short_batch
 
-FLAGS=tf.app.flags.FLAGS
-tf.app.flags.DEFINE_string("cache_file_h5py","../data/ieee_zhihu_cup/data.h5","path of training/validation/test data.") #../data/sample_multiple_label.txt
-tf.app.flags.DEFINE_string("cache_file_pickle","../data/ieee_zhihu_cup/vocab_label.pik","path of vocabulary and label files") #../data/sample_multiple_label.txt
+FLAGS=tf.flags.FLAGS
+tf.flags.DEFINE_string("cache_file_h5py","../data/ieee_zhihu_cup/data.h5","path of training/validation/test data.") #../data/sample_multiple_label.txt
+tf.flags.DEFINE_string("cache_file_pickle","../data/ieee_zhihu_cup/vocab_label.pik","path of vocabulary and label files") #../data/sample_multiple_label.txt
 
-tf.app.flags.DEFINE_float("learning_rate",0.0001,"learning rate")
-tf.app.flags.DEFINE_integer("batch_size", 32, "Batch size for training/evaluating.") #批处理的大小 32-->128
-tf.app.flags.DEFINE_string("ckpt_dir","checkpoint/","checkpoint location for the model")
-tf.app.flags.DEFINE_boolean("is_training",True,"is training.true:tranining,false:testing/inference")
-tf.app.flags.DEFINE_integer("num_epochs",15,"number of epochs to run.")
+tf.flags.DEFINE_float("learning_rate",0.0001,"learning rate")
+tf.flags.DEFINE_integer("batch_size", 32, "Batch size for training/evaluating.") #批处理的大小 32-->128
+tf.flags.DEFINE_string("ckpt_dir","checkpoint/","checkpoint location for the model")
+tf.flags.DEFINE_boolean("is_training",True,"is training.true:tranining,false:testing/inference")
+tf.flags.DEFINE_integer("num_epochs",15,"number of epochs to run.")
 
 # below hyper-parameter is for bert model
 # for a middel size model, train fast. use hidden_size=128, num_hidden_layers=4, num_attention_heads=8, intermediate_size=1024
-tf.app.flags.DEFINE_integer("hidden_size",768,"hidden size")
-tf.app.flags.DEFINE_integer("num_hidden_layers",12,"number of hidden layers")
-tf.app.flags.DEFINE_integer("num_attention_heads",12,"number of attention headers")
-tf.app.flags.DEFINE_integer("intermediate_size",3072,"intermediate size of hidden layer")
-tf.app.flags.DEFINE_integer("max_seq_length",200,"max sequence length")
+tf.flags.DEFINE_integer("hidden_size",768,"hidden size")
+tf.flags.DEFINE_integer("num_hidden_layers",12,"number of hidden layers")
+tf.flags.DEFINE_integer("num_attention_heads",12,"number of attention headers")
+tf.flags.DEFINE_integer("intermediate_size",3072,"intermediate size of hidden layer")
+tf.flags.DEFINE_integer("max_seq_length",200,"max sequence length")
 
 def main(_):
     # 1. get training data and vocabulary & labels dict

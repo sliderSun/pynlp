@@ -14,33 +14,33 @@ import word2vec
 import pickle
 
 #configuration
-FLAGS=tf.app.flags.FLAGS
-tf.app.flags.DEFINE_integer("num_classes",1999+3,"number of label") #3 ADDITIONAL TOKEN: _GO,_END,_PAD
-tf.app.flags.DEFINE_float("learning_rate",0.01,"learning rate")
-tf.app.flags.DEFINE_integer("batch_size", 128, "Batch size for training/evaluating.") #批处理的大小 32-->128-->512
-tf.app.flags.DEFINE_integer("decay_steps", 6000, "how many steps before decay learning rate.") #6000批处理的大小 32-->128
-tf.app.flags.DEFINE_float("decay_rate", 1.0, "Rate of decay for learning rate.") #0.87一次衰减多少
-tf.app.flags.DEFINE_string("ckpt_dir","checkpoint_transformer/","checkpoint location for the model")
-tf.app.flags.DEFINE_integer("sequence_length",25,"max sentence length") #25
-tf.app.flags.DEFINE_integer("embed_size",512,"embedding size")
-tf.app.flags.DEFINE_boolean("is_training",True,"is traning.true:tranining,false:testing/inference")
-tf.app.flags.DEFINE_integer("num_epochs",10,"number of epochs to run.")
-tf.app.flags.DEFINE_integer("validate_every", 1, "Validate every validate_every epochs.") #每10轮做一次验证
-tf.app.flags.DEFINE_integer("validate_step", 1000, "how many step to validate.") #1500做一次检验
-tf.app.flags.DEFINE_boolean("use_embedding",True,"whether to use embedding or not.")
-#tf.app.flags.DEFINE_string("cache_path","text_cnn_checkpoint/data_cache.pik","checkpoint location for the model")
+FLAGS=tf.flags.FLAGS
+tf.flags.DEFINE_integer("num_classes",1999+3,"number of label") #3 ADDITIONAL TOKEN: _GO,_END,_PAD
+tf.flags.DEFINE_float("learning_rate",0.01,"learning rate")
+tf.flags.DEFINE_integer("batch_size", 128, "Batch size for training/evaluating.") #批处理的大小 32-->128-->512
+tf.flags.DEFINE_integer("decay_steps", 6000, "how many steps before decay learning rate.") #6000批处理的大小 32-->128
+tf.flags.DEFINE_float("decay_rate", 1.0, "Rate of decay for learning rate.") #0.87一次衰减多少
+tf.flags.DEFINE_string("ckpt_dir","checkpoint_transformer/","checkpoint location for the model")
+tf.flags.DEFINE_integer("sequence_length",25,"max sentence length") #25
+tf.flags.DEFINE_integer("embed_size",512,"embedding size")
+tf.flags.DEFINE_boolean("is_training",True,"is traning.true:tranining,false:testing/inference")
+tf.flags.DEFINE_integer("num_epochs",10,"number of epochs to run.")
+tf.flags.DEFINE_integer("validate_every", 1, "Validate every validate_every epochs.") #每10轮做一次验证
+tf.flags.DEFINE_integer("validate_step", 1000, "how many step to validate.") #1500做一次检验
+tf.flags.DEFINE_boolean("use_embedding",True,"whether to use embedding or not.")
+#tf.flags.DEFINE_string("cache_path","text_cnn_checkpoint/data_cache.pik","checkpoint location for the model")
 #train-zhihu4-only-title-all.txt
-tf.app.flags.DEFINE_string("traning_data_path","train-zhihu4-only-title-all.txt","path of traning data.") #O.K.train-zhihu4-only-title-all.txt-->training-data/test-zhihu4-only-title.txt--->'training-data/train-zhihu5-only-title-multilabel.txt'
-tf.app.flags.DEFINE_string("word2vec_model_path","zhihu-word2vec-title-desc.bin-512","word2vec's vocabulary and vectors") #zhihu-word2vec.bin-100-->zhihu-word2vec-multilabel-minicount15.bin-100
-tf.app.flags.DEFINE_boolean("multi_label_flag",True,"use multi label or single label.") #set this false. becase we are using it is a sequence of token here.
-tf.app.flags.DEFINE_float("l2_lambda", 0.0001, "l2 regularization")
+tf.flags.DEFINE_string("traning_data_path","train-zhihu4-only-title-all.txt","path of traning data.") #O.K.train-zhihu4-only-title-all.txt-->training-data/test-zhihu4-only-title.txt--->'training-data/train-zhihu5-only-title-multilabel.txt'
+tf.flags.DEFINE_string("word2vec_model_path","zhihu-word2vec-title-desc.bin-512","word2vec's vocabulary and vectors") #zhihu-word2vec.bin-100-->zhihu-word2vec-multilabel-minicount15.bin-100
+tf.flags.DEFINE_boolean("multi_label_flag",True,"use multi label or single label.") #set this false. becase we are using it is a sequence of token here.
+tf.flags.DEFINE_float("l2_lambda", 0.0001, "l2 regularization")
 
-tf.app.flags.DEFINE_integer("d_model",512,"hidden size")
-tf.app.flags.DEFINE_integer("d_k",64,"hidden size")
-tf.app.flags.DEFINE_integer("d_v",64,"hidden size")
-tf.app.flags.DEFINE_integer("h",8,"hidden size")
-tf.app.flags.DEFINE_integer("num_layer",1,"hidden size") #6
-tf.app.flags.DEFINE_integer("decoder_sent_length",25,"length of decoder inputs") #decoder sentence length should be 6 here.
+tf.flags.DEFINE_integer("d_model",512,"hidden size")
+tf.flags.DEFINE_integer("d_k",64,"hidden size")
+tf.flags.DEFINE_integer("d_v",64,"hidden size")
+tf.flags.DEFINE_integer("h",8,"hidden size")
+tf.flags.DEFINE_integer("num_layer",1,"hidden size") #6
+tf.flags.DEFINE_integer("decoder_sent_length",25,"length of decoder inputs") #decoder sentence length should be 6 here.
 
 #1.load data(X:list of lint,y:int). 2.create session. 3.feed data. 4.training (5.validation) ,(6.prediction)
 def main(_):
