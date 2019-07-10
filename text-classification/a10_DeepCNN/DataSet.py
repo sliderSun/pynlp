@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# @Time    : 2018/9/28 12:03
-# @Author  : fanghaishuo
+# @Time    : 2019/5/28 12:03
+# @Author  : sliderSun
 # @FileName: DataSet.py
 
 import numpy as np
