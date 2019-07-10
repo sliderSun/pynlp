@@ -12,7 +12,7 @@ import numpy as np
 from a3_entity_network import EntityNetwork
 #from data_util.\
 from data_util_zhihu import load_data_multilabel_new,create_voabulary,create_voabulary_label
-from tflearn.data_utils import pad_sequences
+from keras.preprocessing.sequence import pad_sequences
 import os,math
 
 #configuration

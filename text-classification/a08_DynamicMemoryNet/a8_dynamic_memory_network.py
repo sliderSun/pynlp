@@ -7,11 +7,11 @@ Dynamic Memory Network: a.Input Module,b.Question Module,c.Episodic Memory Modul
                             taking into account of question and previous memory====>it poduce a 'memory' vecotr.
   4.Answer Module:generate an answer from the final memory vector.
 """
+import numpy as np
 import tensorflow as tf
-import numpy as np
 import tensorflow.contrib as tf_contrib
-import numpy as np
 from tensorflow.contrib import rnn
+
 
 class DynamicMemoryNetwork:
     def __init__(self, num_classes, learning_rate, batch_size, decay_steps, decay_rate, sequence_length, story_length,
