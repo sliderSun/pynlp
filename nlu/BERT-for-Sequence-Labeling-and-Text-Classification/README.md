@@ -137,8 +137,7 @@ Welcome to add!
 |Task name|Explain|data source|
 |-|-|-|
 |CoNLL-2003 named entity recognition|NER||
-|Atis Joint Slot Filling and Intent Prediction||https://github.com/MiuLab/SlotGated-SLU/tree/master/data/atis|
-|Snips Joint Slot Filling and Intent Prediction||https://github.com/MiuLab/SlotGated-SLU/tree/master/data/snips|
+|Joint Slot Filling and Intent Prediction||https://github.com/MiuLab/SlotGated-SLU/tree/master/data/atis|
 |[GLUE](https://gluebenchmark.com/)|||
 
 
